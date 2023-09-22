@@ -64,26 +64,25 @@ class Staff(models.Model):
     position = models.CharField(max_length=50)
     department = models.CharField(max_length=50)
     is_manager = models.BooleanField(default=False)
-    created_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return f"Staff #{self.staffId} - {self.f_name} {self.l_name}"
 
-    def generate_unique_staffId(self):
-        while True:
-            staff_id = str(random.randint(100, 999))
-            if not Staff.objects.filter(staffId=staff_id).exists():
-                self.staffId = staff_id
-                return
+class StaffLogin(models.Model):
+    staff = models.OneToOneField(Staff, on_delete=models.CASCADE, primary_key=True, default='000')
+    username = models.CharField(max_length=3, default="")
+    password = models.CharField(max_length=128, default="password")
+
+    def __str__(self):
+        return self.staff.staffId
 
     def save(self, *args, **kwargs):
-        if not self.staffId:
-            self.generate_unique_staffId()
+        # Set the username to the staffId by default
+        if not self.username:
+            self.username = self.staff.staffId
         super().save(*args, **kwargs)
-        
-class StaffLogin(models.Model):
-    staff = models.OneToOneField(Staff, on_delete=models.CASCADE, primary_key=True)
-    password = models.CharField(max_length=128)
+
+
 
 class services(models.Model):
     service_id = models.CharField(primary_key=True, max_length=2) # 99 service slots, although most won't be used - 2 digit number

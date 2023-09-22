@@ -39,7 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'hotel',
+    'hotel_management',
 ]
+
+LOGIN_REDIRECT_URL = 'homepage'  # 'homepage' should match the name of your homepage URL pattern.
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

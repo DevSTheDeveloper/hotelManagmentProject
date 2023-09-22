@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            overflow: hidden;
+            background-color: #FFFFFF;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        #header {
+            background-color: #3498db;
+            color: #ffffff;
+            text-align: center;
+            padding: 5px;
+            width: 100%;
+            height: 24.4px;x§x§
+        }
+
+        #header a {
+            text-decoration: none;
+            color: #ffffff;
+        }
+
+        #top-text {
+            margin-top: 20px;
+            font-weight: bold;
+            font-size: 24px;
+        }
+
+        #sub-text {
+            margin-top: 10px;
+            font-size: 18px;
+        }
+
+        .button-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
+        }
+        .login-button {
+          width: px;
+          height: 41.02px;
+          background-color: rgb(95, 159, 255);
+          color: white;
+          font-weight: bold;
+          font-size: 20px;
+          border: none;
+          padding: 5px 15px;
+          border-radius: 3px;
+          cursor: pointer;
+          margin: 10px;
+        }
+        .button {
+            width: 167px;
+            height: 65px;
+            background-color: rgb(95, 159, 255);
+            color: white;
+            font-weight: bold;
+            font-size: 20px;
+            border: none;
+            padding: 5px 15px;
+            border-radius: 3px;
+            cursor: pointer;
+            margin: 10px;
+        }
+
+        .admin-button-false {
+            width: 167px;
+            height: 65px;
+            background-color: #ccc; /* Greyed out color for non-admin users */
+            color: #ffffff;
+            font-weight: bold;
+            font-size: 20px;
+            border: none;
+            padding: 5px 15px;
+            border-radius: 3px;
+            cursor: not-allowed;
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="content">
+        <div id="top-text">Home</div>
+        <div id="sub-text">Please select a button below, you will be able to access the services accordingly.</div>
+        <div class="button-container">
+            <button class="button">Rooms</button>
+            <button class="button">Guests</button>
+            <button class="button">Services</button>
+            <button class="button">Payments</button>
+        </div>
+        
+        <button class="admin-button-false" disabled>Admin</button>
+    </div>
+</body>
+</html>

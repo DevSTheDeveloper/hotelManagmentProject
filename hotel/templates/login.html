@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hotel Managment</title>
+    <title>Hotel Management</title>
     <style>
         body {
+            overflow: hidden;
             background-color: white;
             display: flex;
             flex-direction: column;
@@ -31,7 +32,7 @@
             color: white;
             font-weight: bold;
             border: none;
-            padding: 5px 15px;
+            padding: 10px 20px;
             border-radius: 3px;
             cursor: pointer;
             margin-top: auto;
@@ -42,16 +43,17 @@
             font-weight: bold;
         }
         .by-dev {
-          margin-top: 10px;
-          font-family: Helvetica;
-          font-weight: bold;
+            margin-top: 10px;
+            font-family: Helvetica;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
     <div class="login-container">
-        <h1>Hotel Managment</h1>
-        <form>
+        <h1>Hotel Management</h1>
+        <form method="post" action="{% url 'login_view' %}">
+            {% csrf_token %} <!-- Add CSRF token here -->
             <input class="login-input" type="text" placeholder="Employee ID" name="employee_id" required>
             <input class="login-input" type="password" placeholder="Password" name="password" required>
             <button class="login-button" type="submit">LOGIN</button>
