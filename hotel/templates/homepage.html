@@ -60,18 +60,22 @@
           margin: 10px;
         }
         .button {
-            width: 167px;
-            height: 65px;
+            display: inline-block;
+            text-align: center;
+            width: 150px; /* Adjust the width as needed */
+            height: 50px; /* Adjust the height as needed */
+            line-height: 50px; /* Vertically center the text */
             background-color: rgb(95, 159, 255);
             color: white;
             font-weight: bold;
-            font-size: 20px;
+            font-size: 16px; /* Adjust the font size as needed */
+            text-decoration: none; /* Remove underline */
             border: none;
-            padding: 5px 15px;
             border-radius: 3px;
             cursor: pointer;
             margin: 10px;
         }
+        
 
         .admin-button-false {
             width: 167px;
@@ -85,6 +89,9 @@
             border-radius: 3px;
             cursor: not-allowed;
             margin: 20px;
+
+
+        
         }
     </style>
 </head>
@@ -93,9 +100,9 @@
         <div id="top-text">Home</div>
         <div id="sub-text">Please select a button below, you will be able to access the services accordingly.</div>
         <div class="button-container">
-            <a href="{% url 'rooms' %}">Rooms</a>
+            <a href="{% url 'rooms' %}" class="button">Rooms</a>
             <button class="button">Guests</button>
-            <button class="button">Services</button>
+            <button class="button">Reservations</button>
             <button class="button">Payments</button>
         </div>
         
