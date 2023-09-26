@@ -54,7 +54,7 @@
         <h1>Hotel Management</h1>
         <form method="post" action="{% url 'login_view' %}">
             {% csrf_token %} <!-- Add CSRF token here -->
-            <input class="login-input" type="text" placeholder="Employee ID" name="employee_id" required>
+            <input class="login-input" type="text" placeholder="Employee ID" name="staffId" required>
             <input class="login-input" type="password" placeholder="Password" name="password" required>
             <button class="login-button" type="submit">LOGIN</button>
         </form>

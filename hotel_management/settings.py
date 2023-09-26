@@ -29,7 +29,6 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
-# Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -42,8 +41,7 @@ INSTALLED_APPS = [
     'hotel_management',
 ]
 
-LOGIN_REDIRECT_URL = 'homepage'  # 'homepage' should match the name of your homepage URL pattern.
-
+LOGIN_REDIRECT_URL = 'homepage' 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -82,8 +80,12 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
-    }
+        'OPTIONS': {
+            'timeout': 60,  # Increase the timeout (default is 5 seconds)
+        },
+    },
 }
+
 
 
 # Password validation

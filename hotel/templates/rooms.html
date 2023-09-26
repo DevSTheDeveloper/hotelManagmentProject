@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"> 
+    <style>
+        body {
+            background-color: #FFFFFF;
+            text-align: left;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: flex-start;
+            height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .services-container {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .services {
+            background-color: #f2f2f2;
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 20px;
+            display: inline-block;
+            width: 48%; /* Adjust the width as needed */
+            vertical-align: top; /* Align elements to the top of the container */
+            box-sizing: border-box; /* Include padding and border in the width calculation */
+        }
+        
+        
+        #header {
+            color: #ffffff;
+            text-align: left;
+            padding: 5px;
+            width: 100%;
+            height: 24.4px;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        #header a {
+            text-decoration: none;
+            color: #ffffff;
+            font-size: 18px;
+            margin-top: 10px ;
+        }
+
+        .room-list {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .room-dropdown {
+            width: 200px;
+            font-size: 18px;
+            padding: 10px;
+        }
+
+        #selected-room {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        #room-type {
+            font-size: 17px;
+            color: gray;
+            margin-top: 5px;
+        }
+
+        #guest-info {
+            font-size: 14px;
+            color: gray;
+            margin-top: 5px;
+        }
+
+        .return-button {
+            width: 90px;
+            height: 20px;
+            padding: 5px;
+            padding-left: 17px;
+            background-color: rgb(95, 159, 255);
+            color: white !important;
+            font-weight: bold;
+            font-size: 14px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-right: 20px;
+        }
+        .guest-details {
+            background-color: #f2f2f2;
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 20px;
+            /* Add more styles as needed */
+        }
+        
+        .availability-light {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-left: 10px;
+            margin-right: 10px;
+            background-color: rgb(255, 255, 255); /* Default color is set to white, which is the same as the background (No need to disable the light) */
+        }
+
+        /* Added default style for the dropdown */
+        .room-dropdown option[value="default"] {
+            display: none;
+        }
+
+        /* Added style for room features */
+        #room-features {
+            font-size: 18px;
+            margin-top: 10px;
+            border-top: 1px solid #ccc; /* Add a top border to separate sections */
+            padding-top: 10px; /* Add some spacing above the border */
+        }
+
+        #room-status-label {
+            font-size: 18px;
+            margin-top: 10px;
+            margin-right: 10px;
+        }
+
+        #room-status {
+            font-size: 18px;
+            padding: 10px;
+            margin-left: 10pxpx;
+        }
+
+        .submit {
+            background-color: #000000;
+            color: white;
+            font-weight: bold;
+            padding: 5px 15px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .remove-guest {
+            background-color: #ba2a2a;
+            color: white;
+            font-weight: bold;
+            padding: 5px 15px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 10px;
+        
+        }
+    </style>
+</head>
+<body>
+    <div id="header">
+        <a href="{% url 'redirect_to_homepage' %}">Redirect to Homepage</a>
+
+    </div>
+    <h1>Room Management</h1>
+    <div class="room-list">
+        <form method="POST" action="{% url 'rooms' %}">
+            {% csrf_token %}
+            <select class="room-dropdown" id="room-dropdown" name="selected_room">
+                <option value="default" disabled selected>SELECT ROOM</option>
+                {% for room in room_list %}
+                    <option value="{{ room.room_number }}">{{ room.room_number }}</option>
+                {% endfor %}
+            </select>
+            <span class="availability-light"></span>
+            <label for="room-status">Room Status:</label>
+            <select class="room-dropdown" id="room-status" name="room_status">
+                <option value="Set Status">SET STATUS</option>
+                <option value="Occupied">Occupied</option>
+                <option value="Available">Available</option>
+                <option value="Maintenance Req">Maintenance Req</option>
+                <option value="Cleaning">Cleaning</option>
+                <option value="Cleaning Req">Cleaning Req</option>
+                <option value="Maintaining">Maintaining</option>
+            </select>
+            <button class="submit" type="submit">Submit</button>
+        </form>
+    </div>
+    <div id="selected-room">Room Selected: {{ selected_room }}</div>
+
+
+    <div id="selected-room">Room Selected: 305</div>
+    <div id="room-type">Room Type: Standard</div>
+    <div id="guest-info">
+        <span>Guest: John Doe</span>
+        <span>(ID: 12345)</span>
+    </div>
+
+    <!-- Room Features Section (Sample data, you need server-side scripting for database retrieval) -->
+    <div id="room-features">
+        <strong>Room Features/Details:</strong><br>
+        <ul>
+            <li>Floor:</li>
+            <li>Feature 2: Another Sample Feature</li>
+            <!-- You would populate this list dynamically with data from your database -->
+        </ul>
+    </div>
+
+    <div class="services-container">
+        <div class="services">
+            <h3>Services</h3>
+            <h4>Food & Drink</h4>
+            <label for="service-lunch">
+                <input type="checkbox" id="service-lunch" name="services" value="lunch">
+                Lunch (£10.00)
+            </label>
+            <label for="service-dinner">
+                <input type="checkbox" id="service-dinner" name="services" value="dinner">
+                Dinner (£15.00)
+            </label>
+            <h4>Misc.</h4>
+            <label for="service-dryclean">
+                <input type="checkbox" id="service-dryclean" name="services" value="dryclean">
+                Dry Cleaning (£10.00)
+            </label>
+            <!-- Add more services as needed -->
+            <br>
+            <br>
+            <label>Total: £0.00</label>
+            <br>
+            <h6>Note: These services are only applied for today's date</h6>
+            <button class="submit" id="submit">Submit Services</button>
+        </div>
+    
+        <div class="services">
+            <h3>Guest</h3>
+            <label>Name:</label>
+            <br>
+            <br>
+            <label>Guest ID:</label>
+            <br>
+            <br>
+            <label>Other Rooms: NONE</label>
+            <br>
+            <br>
+            <label>Phone Number: 000000000</label>
+            <br>
+            <br>
+            <label>Email: hello@test.com</label>
+            <br>
+            <br>
+            <button class="submit" id="see-guest">See Guest Details</button>
+            <br>
+            <button class="remove-guest" id="remove-guest">(Remove) Evict Guest</button>
+            <br>
+            <h6>'See Guest' Details shows all Guests on record.</h6>
+            <h6>Evicting a guest does not delete the Guest details - To remove it, consult a manager or Admin</h6>
+        </div>
+    </div>
+
+    <div class="guest-details">
+        <h4>Additional Details/Requests</h4>
+        <textarea id="guest-details" rows="4" cols="50"></textarea>
+        <br>
+        <button class="submit" id="subReq">Submit</button>
+    </div>
+    
+
+    <script>
+        const roomDropdown = document.getElementById('room-dropdown');
+        const selectedRoom = document.getElementById('selected-room');
+        const availabilityLight = document.querySelector('.availability-light');
+        const roomFeatures = document.getElementById('room-features');
+        const floorNumber = document.querySelector('#room-features ul li:first-child'); // Select the first <li> element
+    
+        roomDropdown.addEventListener('change', () => {
+            const selectedValue = roomDropdown.value;
+            selectedRoom.textContent = `Room Selected: ${selectedValue}`; //Saves space in the DB by locally finding a substring to get the floor number
+            
+            // Extract the first character as the floor number
+            const floor = selectedValue.charAt(0);
+            floorNumber.textContent = `Floor: ${floor}`;
+    
+            // Toggle the availability light based on the selected room
+            if (selectedValue === 'default') {
+                availabilityLight.style.backgroundColor = 'white'; // Set it to white
+            } else {
+                availabilityLight.style.backgroundColor = 'green';
+            }
+    
+            // Here you would make an AJAX request to your server to retrieve room features
+            // and then populate the roomFeatures div with the retrieved data.
+            // This requires server-side scripting like Django or Express.js.
+        });
+    </script>
+    
+</body>
+</html>

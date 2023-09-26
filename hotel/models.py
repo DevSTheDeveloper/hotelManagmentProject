@@ -68,21 +68,6 @@ class Staff(models.Model):
     def __str__(self):
         return f"Staff #{self.staffId} - {self.f_name} {self.l_name}"
 
-class StaffLogin(models.Model):
-    staff = models.OneToOneField(Staff, on_delete=models.CASCADE, primary_key=True, default='000')
-    username = models.CharField(max_length=3, default="")
-    password = models.CharField(max_length=128, default="password")
-
-    def __str__(self):
-        return self.staff.staffId
-
-    def save(self, *args, **kwargs):
-        # Set the username to the staffId by default
-        if not self.username:
-            self.username = self.staff.staffId
-        super().save(*args, **kwargs)
-
-
 
 class services(models.Model):
     service_id = models.CharField(primary_key=True, max_length=2) # 99 service slots, although most won't be used - 2 digit number
