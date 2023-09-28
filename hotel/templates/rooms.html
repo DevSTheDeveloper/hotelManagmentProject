@@ -164,7 +164,6 @@
 <body>
     <div id="header">
         <a href="{% url 'redirect_to_homepage' %}">Redirect to Homepage</a>
-
     </div>
     <h1>Room Management</h1>
     <div class="room-list">
@@ -190,14 +189,11 @@
             <button class="submit" type="submit">Submit</button>
         </form>
     </div>
-    <div id="selected-room">Room Selected: {{ selected_room }}</div>
-
-
-    <div id="selected-room">Room Selected: 305</div>
-    <div id="room-type">Room Type: Standard</div>
-    <div id="guest-info">
-        <span>Guest: John Doe</span>
-        <span>(ID: 12345)</span>
+    <div id="selected-room">
+        <p>Selected Room Information:</p>
+        <p>Room Number: {{ selected_room.room_number }}</p>
+        <p>Status: {{ selected_room.status }}</p>
+        <p>Guest ID: {% if selected_room.guest_id %}{{ selected_room.guest_id }}{% else %}Null{% endif %}</p>
     </div>
 
     <!-- Room Features Section (Sample data, you need server-side scripting for database retrieval) -->
@@ -269,7 +265,6 @@
         <button class="submit" id="subReq">Submit</button>
     </div>
     
-
     <script>
         const roomDropdown = document.getElementById('room-dropdown');
         const selectedRoom = document.getElementById('selected-room');
@@ -297,6 +292,6 @@
             // This requires server-side scripting like Django or Express.js.
         });
     </script>
-    
 </body>
+
 </html>

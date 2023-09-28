@@ -30,7 +30,18 @@ def redirect_to_homepage(request):
 
 
 def rooms_views(request):
+    # Retrieve all room data
     room_list = Room.objects.all()
-    selected_room = "Some Room"  # Replace this with the actual selected room data
-    return render(request, 'rooms.html', {'room_list': room_list, 'selected_room': selected_room})
+    selected_room = None  # Initialize selected_room as None
 
+    # Check if a room is selected (via a form submission)
+    if request.method == 'POST':
+        room_number = request.POST.get('room_selection')
+        if room_number:
+            try:
+                # Retrieve the selected room based on room_number
+                selected_room = Room.objects.get(room_number=room_number)
+            except Room.DoesNotExist:
+                selected_room = None
+
+    return render(request, 'rooms.html', {'room_list': room_list, 'selected_room': selected_room})

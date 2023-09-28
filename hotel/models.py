@@ -30,9 +30,14 @@ class RoomData(models.Model):
     has_balcony = models.BooleanField(default=False)
 
 class Room(models.Model):
-    room_number = models.ForeignKey(RoomData, on_delete=models.CASCADE)
+    room_number = models.CharField(max_length=10, unique=True)
     status = models.CharField(max_length=20)
-    guest = models.ForeignKey(Guest, on_delete=models.SET_NULL, null=True, blank=True)
+    guest_id = models.ForeignKey(Guest, on_delete=models.SET_NULL, null=True, blank=True)
+
+    class Meta:
+        db_table = 'hotel_room'  # Specify the correct table name
+
+
 
 def get_default_checkout_time():
     return timezone.now() + timedelta(days=1) #Default checkout date is the day after the check in. I have not enforced a time limit (ie. before 11AM) due to coding issues

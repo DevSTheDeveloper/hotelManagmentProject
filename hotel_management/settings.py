@@ -79,12 +79,13 @@ WSGI_APPLICATION = 'hotel_management.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': BASE_DIR / 'db.sqbpro',  # Update the database file name
         'OPTIONS': {
             'timeout': 60,  # Increase the timeout (default is 5 seconds)
         },
     },
 }
+
 
 
 
