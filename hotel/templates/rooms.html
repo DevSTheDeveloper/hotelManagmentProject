@@ -162,12 +162,9 @@
     </style>
 </head>
 <body>
-    <div id="header">
-        <a href="{% url 'redirect_to_homepage' %}">Redirect to Homepage</a>
-    </div>
     <h1>Room Management</h1>
     <div class="room-list">
-        <form method="POST" action="{% url 'rooms' %}">
+        <form id="room-form" method="post">
             {% csrf_token %}
             <select class="room-dropdown" id="room-dropdown" name="selected_room">
                 <option value="default" disabled selected>SELECT ROOM</option>
@@ -177,24 +174,20 @@
             </select>
             <span class="availability-light"></span>
             <label for="room-status">Room Status:</label>
+            <!-- ... Existing HTML code ... -->
             <select class="room-dropdown" id="room-status" name="room_status">
-                <option value="Set Status">SET STATUS</option>
-                <option value="Occupied">Occupied</option>
-                <option value="Available">Available</option>
-                <option value="Maintenance Req">Maintenance Req</option>
-                <option value="Cleaning">Cleaning</option>
-                <option value="Cleaning Req">Cleaning Req</option>
-                <option value="Maintaining">Maintaining</option>
-            </select>
-            <button class="submit" type="submit">Submit</button>
+            <option value="default" disabled selected>SET STATUS</option>
+            <option value="Occupied">Occupied</option>
+            <option value="Available">Available</option>
+            <option value="Maintenance Req">Maintenance Req</option>
+            <option value="Cleaning">Cleaning</option>
+            <option value="Cleaning Req">Cleaning Req</option>
+            <option value="Maintaining">Maintaining</option>
+        </select>
+        <button class="submit" type="submit" id="submit-button">Submit</button>
         </form>
     </div>
-    <div id="selected-room">
-        <p>Selected Room Information:</p>
-        <p>Room Number: {{ selected_room.room_number }}</p>
-        <p>Status: {{ selected_room.status }}</p>
-        <p>Guest ID: {% if selected_room.guest_id %}{{ selected_room.guest_id }}{% else %}Null{% endif %}</p>
-    </div>
+
 
     <!-- Room Features Section (Sample data, you need server-side scripting for database retrieval) -->
     <div id="room-features">
@@ -229,7 +222,7 @@
             <label>Total: £0.00</label>
             <br>
             <h6>Note: These services are only applied for today's date</h6>
-            <button class="submit" id="submit">Submit Services</button>
+            <button class="submit" id="submit-services">Submit Services</button>
         </div>
     
         <div class="services">
@@ -266,32 +259,51 @@
     </div>
     
     <script>
-        const roomDropdown = document.getElementById('room-dropdown');
-        const selectedRoom = document.getElementById('selected-room');
-        const availabilityLight = document.querySelector('.availability-light');
-        const roomFeatures = document.getElementById('room-features');
-        const floorNumber = document.querySelector('#room-features ul li:first-child'); // Select the first <li> element
+        document.addEventListener('DOMContentLoaded', function () {
+            const roomForm = document.getElementById('room-form');
+            const roomDropdown = document.getElementById('room-dropdown');
+            const roomStatusDropdown = document.getElementById('room-status');
+            const submitButton = document.getElementById('submit-button');
     
-        roomDropdown.addEventListener('change', () => {
-            const selectedValue = roomDropdown.value;
-            selectedRoom.textContent = `Room Selected: ${selectedValue}`; //Saves space in the DB by locally finding a substring to get the floor number
-            
-            // Extract the first character as the floor number
-            const floor = selectedValue.charAt(0);
-            floorNumber.textContent = `Floor: ${floor}`;
+            roomForm.addEventListener('submit', function (e) {
+                e.preventDefault(); // Prevent the form from submitting the traditional way
     
-            // Toggle the availability light based on the selected room
-            if (selectedValue === 'default') {
-                availabilityLight.style.backgroundColor = 'white'; // Set it to white
-            } else {
-                availabilityLight.style.backgroundColor = 'green';
-            }
+                // Get the selected room and status
+                const selectedRoom = roomDropdown.value;
+                const selectedStatus = roomStatusDropdown.value;
     
-            // Here you would make an AJAX request to your server to retrieve room features
-            // and then populate the roomFeatures div with the retrieved data.
-            // This requires server-side scripting like Django or Express.js.
+                // Send an AJAX request to update the status in the database
+                fetch('{% url "update_room_status" %}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}',
+                    },
+                    body: JSON.stringify({ room_number: selectedRoom, status: selectedStatus }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Handle the response from the server, e.g., show a success message
+                    if (data.success) {
+                        alert('Room status updated successfully!');
+                    } else {
+                        alert('Error updating room status.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while updating room status.');
+                });
+            });
+    
+            // Add functionality for the "Submit Services" button here
+            const submitServicesButton = document.getElementById('submit-services');
+            submitServicesButton.addEventListener('click', function () {
+                // Add logic to handle service submission here
+                // You can use a similar approach with fetch to send data to the server
+            });
         });
     </script>
+    
 </body>
-
 </html>
