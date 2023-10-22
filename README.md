@@ -67,5 +67,5 @@ These instructions will help you get a copy of the project up and running on you
     python manage.py runserver
     ```
 
-7. **Access the application** in your web browser at [http://localhost:8000](http://localhost:8000).
+7. **Access the application** in your web browser at [([http://localhost:8000](http://127.0.0.1:8000/homepage/))].
 
