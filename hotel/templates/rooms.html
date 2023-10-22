@@ -100,7 +100,6 @@
             padding: 10px;
             border-radius: 6px;
             margin-top: 20px;
-            /* Add more styles as needed */
         }
         
         .availability-light {
@@ -158,6 +157,36 @@
             cursor: pointer;
             margin-top: 10px;
         
+        }
+
+        /* Style for upcoming bookings table */
+        .upcoming-bookings-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .upcoming-bookings-table th, .upcoming-bookings-table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .upcoming-bookings-table th {
+            background-color: #3498db;
+            color: white;
+        }
+
+        /* Style for the "View Upcoming Bookings" button */
+        .view-upcoming-bookings-button {
+            background-color: #3c7ee7;
+            color: white;
+            font-weight: bold;
+            padding: 5px 15px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -252,58 +281,58 @@
     </div>
 
     <div class="guest-details">
-        <h4>Additional Details/Requests</h4>
-        <textarea id="guest-details" rows="4" cols="50"></textarea>
-        <br>
-        <button class="submit" id="subReq">Submit</button>
+        <h4>Upcoming Bookings</h4>
+        <div id="upcoming-bookings-placeholder">
+            <!-- Display upcoming bookings here -->
+            <table class="upcoming-bookings-table">
+                <thead>
+                    <tr>
+                        <th>Check-in Date</th>
+                        <th>Check-out Date</th>
+                        <th>Guest Name</th>
+                        <th>Guest ID</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Sample data for upcoming bookings -->
+                    <tr>
+                        <td>2023-10-15</td>
+                        <td>2023-10-20</td>
+                        <td>John Doe</td>
+                        <td>12345</td>
+                    </tr>
+                    <tr>
+                        <td>2023-10-22</td>
+                        <td>2023-10-25</td>
+                        <td>Jane Smith</td>
+                        <td>67890</td>
+                    </tr>
+                    <!-- Add more rows with upcoming bookings data here -->
+                </tbody>
+            </table>
+        </div>
     </div>
     
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const roomForm = document.getElementById('room-form');
-            const roomDropdown = document.getElementById('room-dropdown');
-            const roomStatusDropdown = document.getElementById('room-status');
-            const submitButton = document.getElementById('submit-button');
-    
-            roomForm.addEventListener('submit', function (e) {
-                e.preventDefault(); // Prevent the form from submitting the traditional way
-    
-                // Get the selected room and status
-                const selectedRoom = roomDropdown.value;
-                const selectedStatus = roomStatusDropdown.value;
-    
-                // Send an AJAX request to update the status in the database
-                fetch('{% url "update_room_status" %}', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': '{{ csrf_token }}',
-                    },
-                    body: JSON.stringify({ room_number: selectedRoom, status: selectedStatus }),
-                })
-                .then(response => response.json())
-                .then(data => {
-                    // Handle the response from the server, e.g., show a success message
-                    if (data.success) {
-                        alert('Room status updated successfully!');
-                    } else {
-                        alert('Error updating room status.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('An error occurred while updating room status.');
-                });
-            });
-    
-            // Add functionality for the "Submit Services" button here
-            const submitServicesButton = document.getElementById('submit-services');
-            submitServicesButton.addEventListener('click', function () {
-                // Add logic to handle service submission here
-                // You can use a similar approach with fetch to send data to the server
+            // Your existing JavaScript code
+
+            // Function to toggle the visibility of upcoming bookings
+            function toggleUpcomingBookings() {
+                const upcomingBookingsPlaceholder = document.getElementById('upcoming-bookings-placeholder');
+                if (upcomingBookingsPlaceholder.style.display === 'none' || upcomingBookingsPlaceholder.style.display === '') {
+                    upcomingBookingsPlaceholder.style.display = 'block';
+                } else {
+                    upcomingBookingsPlaceholder.style.display = 'none';
+                }
+            }
+
+            // Add functionality for the "View Upcoming Bookings" button
+            const viewUpcomingBookingsButton = document.getElementById('view-upcoming-bookings');
+            viewUpcomingBookingsButton.addEventListener('click', function () {
+                toggleUpcomingBookings();
             });
         });
     </script>
-    
 </body>
 </html>

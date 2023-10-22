@@ -52,8 +52,11 @@
 <body>
     <div class="login-container">
         <h1>Hotel Management</h1>
+        {% if error_message %}
+            <p style="color: red;">{{ error_message }}</p>
+        {% endif %}
         <form method="post" action="{% url 'login_view' %}">
-            {% csrf_token %} <!-- Add CSRF token here -->
+            {% csrf_token %}
             <input class="login-input" type="text" placeholder="Employee ID" name="staffId" required>
             <input class="login-input" type="password" placeholder="Password" name="password" required>
             <button class="login-button" type="submit">LOGIN</button>

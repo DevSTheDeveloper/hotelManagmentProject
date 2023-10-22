@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect
 from .models import Room
 from django.db import transaction
 from django.http import JsonResponse
+from django.contrib.auth.models import User
 
 
 def login_view(request):
@@ -11,7 +12,7 @@ def login_view(request):
         staff_id = request.POST['staffId']
         password = request.POST['password']
 
-        with transaction.atomic():  # Use a transaction block
+        with transaction.atomic():
             user = authenticate(request, username=staff_id, password=password)
 
             if user is not None:
@@ -21,6 +22,7 @@ def login_view(request):
                 return render(request, 'login.html', {'error_message': 'Invalid credentials'})
 
     return render(request, 'login.html')
+
 
 
 def redirect_to_rooms(request):
@@ -80,3 +82,15 @@ def update_room_status(request):
         return JsonResponse({'success': True})
     else:
         return JsonResponse({'success': False})
+
+def create_user_view(request):
+    if request.method == 'POST':
+        staff_id = request.POST['staffId']
+
+        # Create a new user with staff ID as the username and "password" as the default password
+        user = User.objects.create_user(username=staff_id, password="password")
+
+        # Save the user object
+        user.save()
+
+        return redirect('login_view')

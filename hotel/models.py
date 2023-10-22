@@ -114,7 +114,6 @@ class Payment(models.Model):
 def generate_unique_reservation_id():
     num_letters = 3
     num_digits = 4
-
     letters = ''.join(random.choice(string.ascii_uppercase) for _ in range(num_letters))
     digits = ''.join(random.choice(string.digits) for _ in range(num_digits))
 

@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">  
+    <style>
+        body {
+            background-color: #FFFFFF;
+            text-align: left;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: flex-start;
+            height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        #header {
+            color: #3498db; 
+            text-align: left;
+            padding: 5px;
+            width: 100%;
+            height: 24.4px;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        #header a {
+            text-decoration: none;
+            color: #3498db; /* Explicitly set link color to blue */
+            font-size: 18px;
+            margin-top: 10px;
+        }
+
+        .staff-list {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .staff-dropdown {
+            width: 200px;
+            font-size: 18px;
+            padding: 10px;
+        }
+
+        #selected-staff {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        #staff-details {
+            font-size: 14px;
+            color: gray;
+            margin-top: 5px;
+        }
+
+        .return-button {
+            width: 90px;
+            height: 20px;
+            padding: 5px;
+            padding-left: 17px;
+            background-color: rgb(95, 159, 255);
+            color: white !important;
+            font-weight: bold;
+            font-size: 14px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-left: 10px; /* Move the button to the left */
+            top: 10px; /* Adjust top position */
+        }
+
+        /* Added default style for the dropdown */
+        .staff-dropdown option[value="default"] {
+            display: none;
+        }
+
+        /* Additional Styles for Admin Features */
+        .admin-panel {
+            background-color: #f2f2f2;
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 20px;
+        }
+
+        .description-textarea {
+            width: 100%;
+            height: 80px;
+            resize: none;
+        }
+
+        .terminate-button {
+            background-color: #e74c3c;
+            color: white;
+            font-weight: bold;
+            padding: 5px 15px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 20px;
+            margin-left: 10px;
+          
+        }
+
+        .new-staff-button {
+          background-color: #3c7ee7;
+          color: white;
+          font-weight: bold;
+          padding: 5px 15px;
+          border: none;
+          border-radius: 6px;
+          cursor: pointer;
+          margin-top: 10px;
+          margin-left: 10px;
+
+      }
+      .password-change {
+        background-color: #e78f3c;
+        color: white;
+        font-weight: bold;
+        padding: 5px 15px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        margin-top: 10px;
+        margin-left: 10px;
+
+    }
+    .warning-label{
+      color: #b03629;
+    }
+      .manager-button {
+        background-color: #e7a83c;
+        color: white;
+        font-weight: bold;
+        padding: 5px 15px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        margin-top: 10px;
+        margin-left: 10px;
+    }
+
+    .financial-panel {
+      background-color: #f2f2f2;
+      padding: 10px;
+      border-radius: 6px;
+      margin-top: 20px;
+  }
+  
+  /* Style for payroll table */
+  .payroll-table {
+      width: 100%;
+      border-collapse: collapse;
+  }
+  
+  .payroll-table th, .payroll-table td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid #ccc;
+  }
+  
+  .payroll-table th {
+      background-color: #3498db;
+      color: white;
+  }
+
+  /* Style for payroll button */
+  .view-payroll-button {
+      background-color: #3c7ee7;
+      color: white;
+      font-weight: bold;
+      padding: 5px 15px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 10px;
+  }
+
+  .save-data {
+    background-color: #000000;
+      color: white;
+      font-weight: bold;
+      padding: 5px 15px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 10px;
+      margin: 10px;
+  }
+    </style>
+</head>
+<body>
+    <div id="header">
+        <a href="#" class="return-button">RETURN</a>
+    </div>
+    <h1>Staff Management (ADMIN)</h1> <!-- Updated the header -->
+    <div class="staff-list">
+        <select class="staff-dropdown" id="staff-dropdown">
+            <option value="default" disabled selected>Select Staff Name</option>
+            <option value="11AA11">John Doe</option>
+            <option value="22BB22">Jane Smith</option>
+            <option value="33CC33">Mike Johnson</option>
+            <option value="44DD44">Alice Brown</option>
+        </select>
+    </div>
+
+    <div id="selected-staff">Staff Selected: No One</div>
+    <div id="staff-details">
+        <span>StaffId: AA11AA</span>
+        <br>
+        <span>Position: Front Desk</span>
+        <br>
+        <span>Manager: No</span>
+        <br>
+        <br>
+        <span>Email: john.doe@example.com</span>
+        <button id="change-email">Change</button> <!--MAKE SURE TO MAKE THIS LEAD TO A NEW URL TO MODIFY CHANGES-->
+        <br>
+        <br>
+        <span>(Phone: 123-456-7890)</span>
+        <button id="change-number">Change</button>
+        <br>
+
+    </div>
+
+    <!-- Admin Panel Section -->
+    <div class="admin-panel">
+        <h2>Admin Functions</h2>
+        <label for="staff-position">Change Staff Position:</label>
+        <select class="staff-position-dropdown" id="staff-position-dropdown">
+          <option value="default" disabled selected>Choose Role</option>
+          <option value="Front Desk">Front Desk</option>
+          <option value="Housekeeping">Housekeeping</option>
+          <option value="Maintenance">Maintenance</option>
+        </select>
+        <br>
+        <button class="new-staff-button" id="new-staff-button"> + Add New Staff</button>
+        <button class="manager-button" id="manager-button">Make Manager</button>
+        <button class="password-change" id="password-change">Change Password</button>
+        <br>
+        <br>
+        <button class="save-data" id="save-data">Save Changes</button>  <!--Make sure to make this refresh page with new changes when implemented-->
+
+      <br>
+      <br>
+      <label class="warning-label">&#x26A0;</label>
+      <label>Warning: This is Action Cannot be Undone!</label>
+
+      <br>
+      <button class="terminate-button" id="terminate-button">Terminate Staff</button>
+
+    </div>
+
+
+    <div class="financial-panel">
+      <h2>Financial Overview</h2>
+      
+      <!-- Payroll Table (Sample data, populate dynamically from the database) -->
+      <table class="payroll-table">
+          <thead>
+              <tr>
+                  <th>Staff Name</th>
+                  <th>Position</th>
+                  <th>Hourly Salary</th>
+                  <th>Total Hours Worked (All Time)</th>
+                  <th>Total Amount Paid (All Time)</th>
+              </tr>
+          </thead>
+          <tbody>
+              <tr>
+                  <td>John Doe</td>
+                  <td>Front Desk</td>
+                  <td>£16</td>
+                  <td>100</td>
+                  <td>£1600</td>
+              </tr>
+              <!-- Add more rows with staff payroll data here -->
+          </tbody>
+      </table>
+
+      <button class="view-payroll-button" id="view-payroll-button">View All Staff Payrolls</button>
+
+  </div>
+<br>
+<a>User created on: 10/09/24</a>
+
+    <!-- SCRIPTS - DO NOT MODIFY-->
+    <script>
+      const staffDropdown = document.getElementById('staff-dropdown');
+      const selectedStaff = document.getElementById('selected-staff');
+      const availabilityLight = document.querySelector('.availability-light');
+      const staffPosition = document.getElementById('staff-position');
+      const staffDescriptionTextarea = document.getElementById('staff-description');
+      const terminateButton = document.getElementById('terminate-button');
+  
+      staffDropdown.addEventListener('change', () => {
+          const selectedOption = staffDropdown.options[staffDropdown.selectedIndex];
+          const selectedValue = selectedOption.value;
+          const selectedText = selectedOption.textContent; // Get the selected staff's name
+  
+          selectedStaff.textContent = `Staff Selected: ${selectedText}`;
+  
+          // Toggle the availability light based on the selected staff
+          if (selectedValue === 'default') {
+              availabilityLight.style.backgroundColor = 'white'; // Set it to white
+          } else {
+              availabilityLight.style.backgroundColor = 'green';
+          }
+  
+          // Here you would make an AJAX request to your server to retrieve staff details
+          // and then populate the staffDetails div with the retrieved data.
+          // This requires server-side scripting like Django or Express.js.
+      });
+  
+      terminateButton.addEventListener('click', () => {
+          // Ask for confirmation using a dialog
+          const confirmTerminate = confirm('Are you sure you want to terminate this staff member? This cannot be undone.');
+          
+          if (confirmTerminate) {
+              // Implement the functionality to terminate staff
+              // Send this information to the server via AJAX for database update.
+              alert('Staff terminated. In order to rehire, click add a new staff button');
+          }
+      });
+  </script>
+</body>
+</html>
