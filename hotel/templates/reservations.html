@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservation Form</title>
+    <style>
+        body {
+            background-color: #FFFFFF;
+            text-align: left;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: flex-start;
+            height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        #header {
+            color: #3498db;
+            text-align: left;
+            padding: 5px;
+            width: 100%;
+            height: 24.4px;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        #header a {
+            text-decoration: none;
+            color: #3498db;
+            font-size: 18px;
+            margin-top: 10px;
+        }
+
+        h1 {
+            color: #000000;
+            text-align: left;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .date-picker-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .date-picker {
+            width: 100%;
+        }
+
+        .room-type-options {
+            display: flex;
+            align-items: center;
+        }
+
+        .room-type-options-wrapper {
+            display: flex;
+            align-items: center;
+            margin-right: 16px;
+        }
+
+        .room-type-options-wrapper input[type="radio"] {
+            margin-right: 8px;
+        }
+
+        .payment-method-label {
+            margin-right: 16px;
+        }
+
+        .credit-card-details {
+            display: none;
+        }
+
+        .credit-card-input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: none;
+            background: none;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .spacer {
+            margin-bottom: 10px;
+        }
+
+        button[type="submit"] {
+            background-color: #3498db;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #2980b9;
+        }
+
+        .payment-method-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .payment-method-label {
+            display: flex;
+            align-items: center;
+            margin-right: 16px;
+        }
+
+        .payment-method-label input[type="radio"] {
+            margin-right: 8px;
+        }
+
+        .return-button {
+            width: 90px;
+            height: 20px;
+            padding: 5px;
+            padding-left: 17px;
+            background-color: rgb(95, 159, 255);
+            color: white !important;
+            font-weight: bold;
+            font-size: 14px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-right: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="header">
+        <a href="#" class="return-button">RETURN</a>
+    </div>
+    <h1>Reservation Form</h1>
+    <form method="post" action="{% url 'make_reservation' %}" id="reservation-form">
+        <div class="date-picker-container spacer">
+            <label for="start-date">Check-In Date:</label>
+            <input type="date" id="start-date" name="start_date" required class="date-picker">
+        </div>
+        <div class="date-picker-container spacer">
+            <label for="end-date">Check-Out Date:</label>
+            <input type="date" id="end-date" name "end_date" required class="date-picker">
+        </div>
+
+        <div class="room-type-container">
+            <label for="room-type">Room Type:</label>
+            <div class="room-type-options">
+                <div class="room-type-options-wrapper">
+                    <input type="radio" id="standard" name="room_type" value="standard" required>
+                    <label for="standard">Standard</label>
+                </div>
+                <div class="room-type-options-wrapper">
+                    <input type="radio" id="deluxe" name="room_type" value="deluxe">
+                    <label for="deluxe">Deluxe</label>
+                </div>
+                <div class="room-type-options-wrapper">
+                    <input type="radio" id="suite" name="room_type" value="suite">
+                    <label for="suite">Suite</label>
+                </div>
+            </div>
+        </div>
+
+        <label for="guest-first-name">Guest First Name:</label>
+        <input type="text" id="guest-first-name" name="guest_first_name" required>
+
+        <label for="guest-last-name">Guest Last Name:</label>
+        <input type="text" id="guest-last-name" name="guest_last_name" required>
+
+        <h2>Contact Information</h2>
+        <label for="guest-email">Email:</label>
+        <input type="email" id="guest-email" name="guest_email" required>
+
+        <label for="guest-phone">Phone:</label>
+        <div class="country-code">
+            <select id="country-code" name="country_code" required>
+                <option value="+1">+1 (USA)</option>
+                <option value="+44">+44 (UK)</option>
+                <!-- Add more country codes as needed -->
+            </select>
+            <input type="tel" id="guest-phone" name="guest_phone" required>
+        </div>
+
+        <label for="guest-address">Address:</label>
+        <textarea id="guest-address" name="guest_address" rows="4" required></textarea>
+
+        <button type="submit" class="submit">Submit Reservation</button>
+    </form>
+
+    <script>
+        // Get the input elements and calculate minimum dates
+        const startDateInput = document.getElementById('start-date');
+        const endDateInput = document.getElementById('end-date');
+        const currentDate = new Date();
+        const minCheckInDate = new Date(currentDate);
+        const minCheckOutDate = new Date(currentDate);
+        minCheckOutDate.setDate(currentDate.getDate() + 1);
+
+        // Set the minimum date for check-in and check-out
+        startDateInput.min = minCheckInDate.toISOString().split('T')[0];
+        endDateInput.min = minCheckOutDate.toISOString().split('T')[0];
+
+        // Add a form submission event listener
+        document.getElementById('reservation-form').addEventListener('submit', function(event) {
+            // Display an alert when the form is submitted
+            alert('Reservation has been confirmed!');
+
+            // Prevent the default form submission behavior
+            event.preventDefault();
+        });
+    </script>
+</body>
+</html>
