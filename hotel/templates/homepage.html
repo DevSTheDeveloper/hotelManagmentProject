@@ -78,17 +78,22 @@
         
 
         .admin-button-false {
-            width: 167px;
-            height: 65px;
+            display: inline-block;
+            text-align: center;
+            width: 150px; /* Adjust the width as needed */
+            height: 50px; /* Adjust the height as needed */
+            line-height: 50px; /* Vertically center the text */
+            color: white;
+            font-weight: bold;
+            font-size: 16px; /* Adjust the font size as needed */
+            text-decoration: none; /* Remove underline */
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            margin: 10px;
             background-color: #ccc; /* Greyed out color for non-admin users */
             color: #ffffff;
-            font-weight: bold;
-            font-size: 20px;
-            border: none;
-            padding: 5px 15px;
-            border-radius: 3px;
             cursor: not-allowed;
-            margin: 20px;
 
 
         
@@ -98,11 +103,11 @@
 <body>
     <div id="content">
         <div id="top-text">Home</div>
-        <div id="sub-text">Please select a button below, you will be able to access the services accordingly.</div>
+        <div id="sub-text">Please select a button below, you will be able to access the services accordingly. Click Reservations for new bookings.</div>
         <div class="button-container">
             <a href="{% url 'rooms' %}" class="button">Rooms</a>
             <button class="button">Guests</button>
-            <button class="button">Reservations</button>
+            <a href="{% url 'make_reservation' %}" class="button">Reservations</a>
             <button class="button">Payments</button>
         </div>
         

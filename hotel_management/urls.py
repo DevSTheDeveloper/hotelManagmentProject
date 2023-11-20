@@ -12,6 +12,5 @@ urlpatterns = [
     path('rooms/', views.rooms_views, name='rooms'),  # Updated view function name and URL pattern
     path('redirect-to-homepage/', redirect_to_homepage, name='redirect_to_homepage'),
     path('update_room_status/', views.update_room_status, name='update_room_status'),
-    path('make_reservation/', views.reservation_view, name='make_reservation'),
-
+    path('reservations/', views.make_reservation, name='make_reservation'),
 ]
