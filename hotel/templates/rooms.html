@@ -133,7 +133,7 @@
         #room-status {
             font-size: 18px;
             padding: 10px;
-            margin-left: 10pxpx;
+            margin-left: 10px;
         }
 
         .submit {
@@ -156,7 +156,6 @@
             border-radius: 6px;
             cursor: pointer;
             margin-top: 10px;
-        
         }
 
         /* Style for upcoming bookings table */
@@ -188,12 +187,25 @@
             cursor: pointer;
             margin-top: 10px;
         }
+
+        /* Additional styles for feedback messages */
+        .feedback {
+            margin-top: 10px;
+            color: #4CAF50;
+            font-weight: bold;
+        }
+
+        .error-message {
+            margin-top: 10px;
+            color: #ba2a2a;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
     <h1>Room Management</h1>
     <div class="room-list">
-        <form id="room-form" method="post">
+        <form id="room-form" method="post" action="{% url 'update_room_status' %}">
             {% csrf_token %}
             <select class="room-dropdown" id="room-dropdown" name="selected_room">
                 <option value="default" disabled selected>SELECT ROOM</option>
@@ -203,20 +215,18 @@
             </select>
             <span class="availability-light"></span>
             <label for="room-status">Room Status:</label>
-            <!-- ... Existing HTML code ... -->
             <select class="room-dropdown" id="room-status" name="room_status">
-            <option value="default" disabled selected>SET STATUS</option>
-            <option value="Occupied">Occupied</option>
-            <option value="Available">Available</option>
-            <option value="Maintenance Req">Maintenance Req</option>
-            <option value="Cleaning">Cleaning</option>
-            <option value="Cleaning Req">Cleaning Req</option>
-            <option value="Maintaining">Maintaining</option>
-        </select>
-        <button class="submit" type="submit" id="submit-button">Submit</button>
+                <option value="default" disabled selected>SET STATUS</option>
+                <option value="Occupied">Occupied</option>
+                <option value="Available">Available</option>
+                <option value="Maintenance Req">Maintenance Req</option>
+                <option value="Cleaning">Cleaning</option>
+                <option value="Cleaning Req">Cleaning Req</option>
+                <option value="Maintaining">Maintaining</option>
+            </select>
+            <button class="submit" type="submit" id="submit-button">Submit</button>
         </form>
     </div>
-
 
     <!-- Room Features Section (Sample data, you need server-side scripting for database retrieval) -->
     <div id="room-features">
@@ -333,6 +343,23 @@
                 toggleUpcomingBookings();
             });
         });
+
+        // Function to handle form submission and update room status
+        function updateRoomStatus(event) {
+            event.preventDefault(); // Prevents the default form submission
+
+            // Get selected room and status values
+            const selectedRoom = document.getElementById('room-dropdown').value;
+            const selectedStatus = document.getElementById('room-status').value;
+
+            // Perform any additional logic or AJAX request to update room status here
+
+            // Provide feedback to the user (This is a placeholder, update as needed)
+            const feedbackElement = document.createElement('div');
+            feedbackElement.className = 'feedback';
+            feedbackElement.textContent = `Room ${selectedRoom} status updated to ${selectedStatus}.`;
+            document.getElementById('room-form').appendChild(feedbackElement);
+        }
     </script>
 </body>
 </html>
