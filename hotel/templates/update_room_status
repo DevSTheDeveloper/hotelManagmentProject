@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservation Success</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        h1 {
+            color: green;
+        }
+        p {
+            font-size: 18px;
+        }
+        a {
+            text-decoration: none;
+            color: #3498db;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Reservation Success</h1>
+    <p>Your reservation for Room <span id="roomNumber"></span> is confirmed!</p>
+    <p>Status of the room has been changed to <span id="status"></span>.</p>
+    <p>Thank you for choosing our hotel.</p>
+    <a href="{% url 'homepage' %}">Back to Homepage</a>
+
+    <script>
+        // You can use JavaScript to set the room number and status dynamically
+        const roomNumber = document.getElementById('roomNumber');
+        const status = document.getElementById('status');
+
+        // Set the room number and status from the data passed by the server
+        // Replace 'roomNumberData' and 'statusData' with the actual variable names
+        roomNumber.innerText = roomNumberData;
+        status.innerText = statusData;
+    </script>
+</body>
+</html>

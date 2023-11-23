@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservation Success</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        h1 {
+            color: green;
+        }
+        p {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        a {
+          width: 130px;
+          height: 30px;
+          padding: 5px;
+          padding-left: 17px;
+          background-color: rgb(95, 159, 255);
+          color: white !important;
+          font-weight: bold;
+          font-size: 14px;
+          border: none;
+          border-radius: 6px;
+          cursor: pointer;
+          margin-right: 20px;
+          text-decoration: none;
+          text-align: center;
+      }
+        .details {
+            text-align: left;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Reservation Success</h1>
+    <div class="details">
+        <p>Customer:  <span id="guestName"></span>,</p>
+        <p>Room <span id="roomNumber"></span> is confirmed to have been booked.</p>
+        <p>Status of the room has been changed to <span id="status"></span>.</p>
+        <p>Additional Reservation Items:</p>
+        <p>Check-in Date: <span id="checkInDate"></span></p>
+        <p>Check-out Date: <span id="checkOutDate"></span></p>
+    </div>
+    <br>
+    <br>
+
+    <a href="{% url 'homepage' %}">Back to Homepage</a>
+
+</body>
+</html>

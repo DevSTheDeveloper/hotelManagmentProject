@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect
 from .models import Room
 from .models import Reservation
 from . import views
+from .models import Guest
 from django.db import transaction
 from django.http import JsonResponse
 from django.contrib.auth.models import User
@@ -45,16 +46,27 @@ def reservation_view(request):
 
     return render(request, 'reservation.html', {'form': form})
 
+def generate_unique_user_id():
+    while True:
+        user_id = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
+        if not Guest.objects.filter(user_id=user_id).exists():
+            return user_id
 
 def make_reservation(request):
     if request.method == 'POST':
-        form = ReservationForm(request.POST)  # Use your form for reservations
+        form = ReservationForm(request.POST)
 
         if form.is_valid():
+            # Extract form data
             room_type = form.cleaned_data['room_type']
             check_in_date = form.cleaned_data['start_date']
             check_out_date = form.cleaned_data['end_date']
-            guest_name = form.cleaned_data['guest_name']
+            guest_first_name = form.cleaned_data['guest_first_name']
+            guest_last_name = form.cleaned_data['guest_last_name']
+            guest_email = form.cleaned_data['guest_email']
+            country_code = form.cleaned_data['country_code']
+            guest_phone = form.cleaned_data['guest_phone']
+            guest_address = form.cleaned_data['guest_address']
 
             # Check room availability
             try:
@@ -62,16 +74,31 @@ def make_reservation(request):
             except Room.DoesNotExist:
                 return render(request, 'reservations.html', {'error_message': 'No rooms available of this type'})
 
+            # Check if the guest with the given email already exists
+            try:
+                guest = Guest.objects.get(email=guest_email)
+            except Guest.DoesNotExist:
+                # Guest does not exist, create a new one
+                guest = Guest.objects.create(
+                    email=guest_email,
+                    first_name=guest_first_name,
+                    last_name=guest_last_name,
+                    country_code=country_code,
+                    phone=guest_phone,
+                    address=guest_address,
+                )
+                # Generate a unique user ID
+                guest.user_id = generate_unique_user_id()
+                guest.save()
+
             # Create a reservation
-            guest = Guest.objects.get(name=guest_name)  # Adjust based on your Guest model
-            reservation = Reservation(
+            reservation = Reservation.objects.create(
                 guest=guest,
                 room=room,
                 check_in=check_in_date,
                 check_out=check_out_date,
                 # Set other fields as needed
             )
-            reservation.save()
 
             # Update room status
             room.status = 'Occupied'
@@ -80,7 +107,7 @@ def make_reservation(request):
             return redirect('success_page')  # Redirect to a success page
 
     else:
-        form = ReservationForm()  # If you have a form for reservations
+        form = ReservationForm()
 
     return render(request, 'reservations.html', {'form': form})
 
@@ -112,7 +139,7 @@ def rooms_views(request):
 def update_room_status(request):
     if request.method == 'POST':
         # Get the selected room and status
-        selected_room = request.POST.get('selected_room')  # Updated parameter name
+        selected_room = request.POST.get('selected_room')
         selected_status = request.POST.get('room_status')
 
         print(f"Updating room {selected_room} status to {selected_status}")
@@ -129,7 +156,13 @@ def update_room_status(request):
 
         print("Room status updated")  # Add this line to check if the update is performed
 
-        return JsonResponse({'success': True})
+        # Send a JsonResponse indicating success
+        response_data = {'success': True}
+
+        # Add details for the alert box
+        response_data['alert_message'] = f"Status of room {selected_room} changed to {selected_status}"
+
+        return JsonResponse(response_data)
     else:
         return JsonResponse({'success': False, 'error': 'Invalid request method'})
 

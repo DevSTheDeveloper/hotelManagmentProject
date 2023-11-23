@@ -233,7 +233,9 @@
         <strong>Room Features/Details:</strong><br>
         <ul>
             <li>Floor:</li>
-            <li>Feature 2: Another Sample Feature</li>
+            <li>Room Type: </li>
+            <li>Room Price(Per night): </li>
+
             <!-- You would populate this list dynamically with data from your database -->
         </ul>
     </div>
@@ -326,7 +328,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             // Your existing JavaScript code
-
+    
             // Function to toggle the visibility of upcoming bookings
             function toggleUpcomingBookings() {
                 const upcomingBookingsPlaceholder = document.getElementById('upcoming-bookings-placeholder');
@@ -336,30 +338,29 @@
                     upcomingBookingsPlaceholder.style.display = 'none';
                 }
             }
-
+    
             // Add functionality for the "View Upcoming Bookings" button
             const viewUpcomingBookingsButton = document.getElementById('view-upcoming-bookings');
             viewUpcomingBookingsButton.addEventListener('click', function () {
                 toggleUpcomingBookings();
             });
+    
+            // Function to handle form submission and update room status
+            function updateRoomStatus(event) {
+                event.preventDefault();
+        
+                const selectedRoom = document.getElementById('room-dropdown').value;
+                const selectedStatus = document.getElementById('room-status').value;
+        
+                // Perform any additional logic or AJAX request to update room status here
+        
+                // Display an alert box with the message from the server
+                alert(data.alert_message);
+            }
+                        
+    
         });
-
-        // Function to handle form submission and update room status
-        function updateRoomStatus(event) {
-            event.preventDefault(); // Prevents the default form submission
-
-            // Get selected room and status values
-            const selectedRoom = document.getElementById('room-dropdown').value;
-            const selectedStatus = document.getElementById('room-status').value;
-
-            // Perform any additional logic or AJAX request to update room status here
-
-            // Provide feedback to the user (This is a placeholder, update as needed)
-            const feedbackElement = document.createElement('div');
-            feedbackElement.className = 'feedback';
-            feedbackElement.textContent = `Room ${selectedRoom} status updated to ${selectedStatus}.`;
-            document.getElementById('room-form').appendChild(feedbackElement);
-        }
     </script>
+            
 </body>
 </html>

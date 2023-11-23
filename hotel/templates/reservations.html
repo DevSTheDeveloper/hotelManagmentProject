@@ -138,9 +138,24 @@
             margin-right: 8px;
         }
 
-        .return-button {
+        .button1 {
             width: 90px;
             height: 20px;
+            padding: 5px;
+            padding-left: 17px;
+            background-color: rgb(95, 159, 255);
+            color: white !important;
+            font-weight: bold;
+            font-size: 14px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-right: 20px;
+        }
+
+        .button2 {
+            width: 90px;
+            height: 40px;
             padding: 5px;
             padding-left: 17px;
             background-color: rgb(95, 159, 255);
@@ -156,7 +171,7 @@
 </head>
 <body>
     <div id="header">
-        <a href="#" class="return-button">RETURN</a>
+        <a href="#" class="button1">RETURN</a>
     </div>
     <h1>Reservation Form</h1>
     <form method="post" action="{% url 'make_reservation' %}" id="reservation-form">
@@ -196,21 +211,17 @@
         <h2>Contact Information</h2>
         <label for="guest-email">Email:</label>
         <input type="email" id="guest-email" name="guest_email" required>
-
+        <label>If customer email is already stored, will be linked to prev bookings automatically</label>
         <label for="guest-phone">Phone:</label>
         <div class="country-code">
-            <select id="country-code" name="country_code" required>
-                <option value="+1">+1 (USA)</option>
-                <option value="+44">+44 (UK)</option>
-                <!-- Add more country codes as needed -->
-            </select>
             <input type="tel" id="guest-phone" name="guest_phone" required>
         </div>
 
         <label for="guest-address">Address:</label>
         <textarea id="guest-address" name="guest_address" rows="4" required></textarea>
-
-        <button type="submit" class="submit">Submit Reservation</button>
+        <br>
+        <br>
+        <a type="submit" class="button2">Submit</a>
     </form>
 
     <script>
