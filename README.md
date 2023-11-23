@@ -4,6 +4,17 @@
 
 The Hotel Management System is a web-based application that allows hotel staff to manage room reservations, check-in/check-out guests, and perform various administrative tasks. This system provides an efficient way to streamline hotel operations and improve the guest experience.
 
+<img width="1800" alt="Screenshot 2023-11-23 at 11 30 03" src="https://github.com/DevSTheDeveloper/hotelManagmentProject/assets/83958063/d869ce65-d5e8-4a2f-9374-dff5266eb918">
+
+<img width="1800" alt="Screenshot 2023-11-23 at 11 29 24" src="https://github.com/DevSTheDeveloper/hotelManagmentProject/assets/83958063/bfb14360-49ee-4f1b-82a2-a2847538a7cd">
+
+<img width="1800" alt="Screenshot 2023-11-23 at 11 28 49" src="https://github.com/DevSTheDeveloper/hotelManagmentProject/assets/83958063/0b5de63a-dd0c-4167-b394-22d8c951a25d">
+
+<img width="1800" alt="Screenshot 2023-11-23 at 11 29 48" src="https://github.com/DevSTheDeveloper/hotelManagmentProject/assets/83958063/e06ffaae-5e09-4acd-aadc-c2c81f0a6c7f">
+
+
+
+
 ## Features
 
 - **Room Reservations:** Guests can reserve rooms by selecting check-in and check-out dates, choosing room types, and providing their personal information.
