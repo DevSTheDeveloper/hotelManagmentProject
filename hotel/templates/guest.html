@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .guest-details {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .upcoming-bookings-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .upcoming-bookings-table th, .upcoming-bookings-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .upcoming-bookings-table th {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .upcoming-bookings-table tbody tr:hover {
+            background-color: #f5f5f5;
+            cursor: pointer;
+        }
+
+        #selected-booking-details {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: left;
+            display: none; /* Initially hidden */
+        }
+
+        .delete-button {
+            background-color: #ba2a2a;
+            color: white;
+            font-weight: bold;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .search-bar {
+            margin-top: 10px;
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+
+        .expand-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .expand-box-placeholder {
+            margin-top: 20px;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <div class="guest-details">
+        <h2>All Guests</h2>
+        <input type="text" class="search-bar" placeholder="Search by guest name" oninput="searchGuests(this.value)">
+        
+        <div id="upcoming-bookings-placeholder">
+            <table class="upcoming-bookings-table">
+                <thead>
+                    <tr>
+                        <th>Guest First Name</th>
+                        <th>Guest Last Name</th>
+                        <th>Guest ID</th>
+                        <th>Date Created</th>
+                    </tr>
+                </thead>
+                <tbody id="booking-table-body">
+                    <!-- Table body will be populated dynamically -->
+                </tbody>
+            </table>
+        </div>
+
+        <div id="selected-booking-details" class="expand-box">
+            <div id="expand-box-content" class="expand-box-placeholder">Select a Guest to view more information</div>
+            <button class="delete-button" onclick="deleteSelectedBooking()">Delete Selected Guest</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Populate the list with fake data for demonstration purposes
+            const fakeData = [
+                { guestFirstName: 'John', guestLastName: 'Doe', guestID: '12345', dateCreated: '2024-01-25' },
+                { guestFirstName: 'Jane', guestLastName: 'Smith', guestID: '67890', dateCreated: '2024-01-24' },
+                // Add more fake data as needed
+            ];
+
+            populateTable(fakeData);
+
+            // Function to populate the table with data
+            function populateTable(guests) {
+                const tableBody = document.getElementById('booking-table-body');
+
+                // Clear existing content
+                tableBody.innerHTML = '';
+
+                // Iterate over guests and create table rows
+                guests.forEach(guest => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${guest.guestFirstName}</td>
+                        <td>${guest.guestLastName}</td>
+                        <td>${guest.guestID}</td>
+                        <td>${guest.dateCreated}</td>
+                    `;
+                    row.addEventListener('click', () => displaySelectedBookingDetails(guest));
+                    tableBody.appendChild(row);
+                });
+            }
+
+            // Function to display selected booking details
+            function displaySelectedBookingDetails(guest) {
+                const detailsContainer = document.getElementById('selected-booking-details');
+                const expandBoxContent = document.getElementById('expand-box-content');
+
+                // Display the expansion box
+                detailsContainer.style.display = 'flex';
+
+                // Update content in the expansion box
+                expandBoxContent.innerHTML = `
+                    <h3>Selected Guest Details</h3>
+                    <p><strong>Guest First Name:</strong> ${guest.guestFirstName}</p>
+                    <p><strong>Guest Last Name:</strong> ${guest.guestLastName}</p>
+                    <p><strong>Guest ID:</strong> ${guest.guestID}</p>
+                    <p><strong>Date Created:</strong> ${guest.dateCreated}</p>
+                `;
+            }
+
+            // Function to handle guest deletion (simulate backend deletion)
+            window.deleteSelectedBooking = function () {
+                const selectedDetailsContainer = document.getElementById('selected-booking-details');
+                if (selectedDetailsContainer.style.display === 'flex') {
+                    // Simulate backend deletion (replace with actual AJAX request)
+                    console.log(`Deleting guest with ID ${selectedDetailsContainer.querySelector('p:nth-child(3)').innerText}`);
+
+                    // After deletion, re-populate the table
+                    populateTable(fakeData);
+                    
+                    // Clear selected details and hide the expansion box
+                    selectedDetailsContainer.innerHTML = '';
+                    selectedDetailsContainer.style.display = 'none';
+                }
+            };
+
+            // Function to search guests by name
+            window.searchGuests = function (searchTerm) {
+                const filteredGuests = fakeData.filter(guest =>
+                    guest.guestFirstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    guest.guestLastName.toLowerCase().includes(searchTerm.toLowerCase())
+                );
+
+                populateTable(filteredGuests);
+            };
+        });
+    </script>
+</body>
+</html>

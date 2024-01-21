@@ -15,6 +15,27 @@
             margin: 0;
             padding: 20px;
         }
+        .button1 {
+            width: 90px;
+            height: 20px;
+            padding: 5px;
+            padding-left: 5px;
+            margin-left: 5px;
+            background-color: rgb(95, 159, 255);
+            color: white !important;
+            font-weight: bold;
+            font-size: 14px; /* Adjust the font size as needed */
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none; /* Remove underline */
+            display: flex;
+            align-items: center; /* Align text vertically in the middle */
+        }
+        
+        
+        
+        
 
         .services-container {
             display: flex;
@@ -203,7 +224,10 @@
     </style>
 </head>
 <body>
+    <a href="{% url 'homepage' %}" class="button1">RETURN</a>
+
     <h1>Room Management</h1>
+
     <div class="room-list">
         <form id="room-form" method="post" action="{% url 'update_room_status' %}">
             {% csrf_token %}
