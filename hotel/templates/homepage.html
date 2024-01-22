@@ -106,7 +106,7 @@
         <div id="sub-text">Please select a button below, you will be able to access the services accordingly. Click Reservations for new bookings.</div>
         <div class="button-container">
             <a href="{% url 'rooms' %}" class="button">Rooms</a>
-            <button class="button">Guests</button>
+            <a href="{% url 'guest_page' %}" class="button">Guests</a>
             <a href="{% url 'make_reservation' %}" class="button">Reservations</a>
             <button class="button">Payments</button>
         </div>

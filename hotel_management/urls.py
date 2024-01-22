@@ -13,4 +13,6 @@ urlpatterns = [
     path('redirect-to-homepage/', redirect_to_homepage, name='redirect_to_homepage'),
     path('update_room_status/', views.update_room_status, name='update_room_status'),
     path('reservations/', views.make_reservation, name='make_reservation'),
+    path('guests/', TemplateView.as_view(template_name='guest.html'), name='guest_page'),
+
 ]
