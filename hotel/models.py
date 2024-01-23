@@ -5,6 +5,64 @@ from django.db import models
 from django.utils import timezone
 from django.core.exceptions import ValidationError
 import random
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
+from django.db import models
+
+
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.db import models
+
+class StaffManager(BaseUserManager):
+    def create_user(self, staff_id, password=None, **extra_fields):
+        if not staff_id:
+            raise ValueError('The Staff ID field must be set')
+        user = self.model(staff_id=staff_id, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, staff_id, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+
+        return self.create_user(staff_id, password, **extra_fields)
+
+class Staff(AbstractBaseUser, PermissionsMixin):
+    staff_id = models.CharField(primary_key=True, max_length=3)
+    f_name = models.CharField(max_length=50)
+    l_name = models.CharField(max_length=50)
+    email = models.EmailField(max_length=320)
+    phone = models.CharField(max_length=20)
+    position = models.CharField(max_length=50)
+    department = models.CharField(max_length=50)
+    is_manager = models.BooleanField(default=False)
+
+    # Add the following lines to resolve the clashes
+    groups = models.ManyToManyField(
+        'auth.Group',
+        related_name='staff_set',
+        related_query_name='staff',
+        blank=True,
+        verbose_name='groups',
+        help_text='The groups this user belongs to.',
+    )
+    user_permissions = models.ManyToManyField(
+        'auth.Permission',
+        related_name='staff_set',
+        related_query_name='staff',
+        blank=True,
+        verbose_name='user permissions',
+        help_text='Specific permissions for this user.',
+    )
+
+    objects = StaffManager()
+
+    USERNAME_FIELD = 'staff_id'
+
+    def __str__(self):
+        return self.staff_id
+
+
 
 class Guest(models.Model):
     guest_fname = models.CharField(max_length=100)
@@ -13,7 +71,7 @@ class Guest(models.Model):
     
     class Meta:
         db_table = 'hotel_guest'
-
+        
 class GuestData(models.Model):
     guest_id = models.ForeignKey(Guest, on_delete=models.CASCADE)
     guest_phone = models.CharField(max_length=20)

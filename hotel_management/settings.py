@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'hotel',
     'hotel_management',
 ]
+CSRF_COOKIE_SECURE = False
 
 LOGIN_REDIRECT_URL = 'homepage' 
 MIDDLEWARE = [
@@ -51,6 +52,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+
 ]
 
 ROOT_URLCONF = 'hotel_management.urls'
