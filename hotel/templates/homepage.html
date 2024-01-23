@@ -20,8 +20,9 @@
             text-align: center;
             padding: 5px;
             width: 100%;
-            height: 24.4px;x§x§
+            height: 24.4px; /* Remove x§x§ */
         }
+        
 
         #header a {
             text-decoration: none;
@@ -98,9 +99,35 @@
 
         
         }
+
+        #logout-button {
+            width: 90px;
+            height: 20px;
+            padding: 5px;
+            background-color: rgb(95, 159, 255);
+            color: white !important;
+            font-weight: bold;
+            font-size: 14px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-right: 20px;
+            text-decoration: none; /* Remove underline */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            outline: none; /* Remove the default focus outline */
+            text-decoration: none !important;
+        }
+        
+
     </style>
 </head>
 <body>
+    <div id="header">
+        <a href="{% url 'logout' %}" id="logout-button" style="text-decoration: none;">LOG OUT</a>
+    </div>
+
     <div id="content">
         <div id="top-text">Home</div>
         <div id="sub-text">Please select a button below, you will be able to access the services accordingly. Click Reservations for new bookings.</div>
