@@ -11,6 +11,30 @@
             text-align: center;
         }
 
+        #header {
+            display: flex;
+            justify-content: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .button1 {
+            width: 90px;
+            height: 20px;
+            padding: 5px;
+            background-color: rgb(95, 159, 255);
+            color: white !important;
+            font-weight: bold;
+            font-size: 14px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-right: 20px;
+            text-decoration: none; /* Remove underline */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         .guest-details {
             max-width: 800px;
             margin: 0 auto;
@@ -76,12 +100,16 @@
             margin-top: 20px;
             color: #888;
         }
+
     </style>
 </head>
 <body>
+    <div id="header">
+        <a href="{% url 'homepage' %}" class="button1">RETURN</a>
+    </div>
     <div class="guest-details">
         <h2>All Guests</h2>
-        <input type="text" class="search-bar" placeholder="Search by guest name" oninput="searchGuests(this.value)">
+        <input type="text" class="search-bar" placeholder="Search by Guest Name" oninput="searchGuests(this.value)">
         
         <div id="upcoming-bookings-placeholder">
             <table class="upcoming-bookings-table">
