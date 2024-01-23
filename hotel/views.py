@@ -10,7 +10,16 @@ from django.http import JsonResponse
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.csrf import csrf_protect
+from django.contrib.auth.signals import user_logged_in
+from django.dispatch import receiver
 
+@receiver(user_logged_in)
+def check_user_is_staff(sender, request, user, **kwargs):
+    # Check if the user is staff
+    if user.is_authenticated and user.is_staff:
+        request.session['is_staff'] = True
+    else:
+        request.session['is_staff'] = False
 
 @csrf_protect
 def login_view(request):
