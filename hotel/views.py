@@ -146,6 +146,10 @@ def rooms_views(request):
     return render(request, 'rooms.html', {'room_list': room_list, 'selected_room': selected_room})
 
 
+
+
+
+
 @csrf_exempt
 def update_room_status(request):
     if request.method == 'POST':

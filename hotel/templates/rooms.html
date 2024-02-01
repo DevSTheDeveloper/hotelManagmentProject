@@ -217,7 +217,28 @@
             color: #ba2a2a;
             font-weight: bold;
         }
-    </style>
+        #selected-room {
+            margin-top: 20px;
+            border-top: 1px solid #ccc;
+            padding-top: 20px;
+        }
+
+        #room-features li {
+            list-style-type: none;
+            margin-top: 5px;
+        }
+  
+        .guest-details {
+            background-color: #f2f2f2;
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 20px;
+            display: inline-block;
+            width: 48%; /* Adjust the width as needed */
+            box-sizing: border-box; /* Include padding and border in the width calculation */
+            vertical-align: top; /* Align elements to the top of the container */
+        }
+        </style>
 </head>
 <body>
     <a href="{% url 'homepage' %}" class="button1">RETURN</a>
@@ -248,17 +269,22 @@
         </form>
     </div>
 
-    <!-- Room Features Section (Sample data, you need server-side scripting for database retrieval) -->
-    <div id="room-features">
-        <strong>Room Features/Details:</strong><br>
-        <ul>
-            <li>Floor:</li>
-            <li>Room Type: </li>
-            <li>Room Price(Per night): </li>
 
-            <!-- You would populate this list dynamically with data from your database -->
+    <!-- Room Features Section (Sample data, you need server-side scripting for database retrieval) -->
+    
+    <!-- Inside the room-list div, after the room-status dropdown -->
+    <div id="selected-room">
+        <h2>Selected Room Details</h2>
+        <p id="room-features">Room Features:</p>
+        <ul>
+            <li>Balcony: <span id="balcony-value">N/A</span></li>
+            <li>Accommodation Size: <span id="accommodation-size-value">N/A</span></li>
+            <li>Price: <span id="room-price-value">N/A</span></li>
         </ul>
     </div>
+    
+    
+
 
     <div class="services-container">
         <div class="services">
@@ -347,40 +373,47 @@
     
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // Your existing JavaScript code
+            function updateRoomDetails(selectedRoom) {
+                const roomDetailsElement = document.getElementById('selected-room');
     
-            // Function to toggle the visibility of upcoming bookings
-            function toggleUpcomingBookings() {
-                const upcomingBookingsPlaceholder = document.getElementById('upcoming-bookings-placeholder');
-                if (upcomingBookingsPlaceholder.style.display === 'none' || upcomingBookingsPlaceholder.style.display === '') {
-                    upcomingBookingsPlaceholder.style.display = 'block';
-                } else {
-                    upcomingBookingsPlaceholder.style.display = 'none';
+                // Manually set room details based on room number
+                if (selectedRoom % 2 === 1) {  // Odd room
+                    roomDetailsElement.innerHTML = `
+                        <h2>Selected Room Details</h2>
+                        <p id="room-type">Room Type: <span id="room-type-value">Standard</span></p>
+                        <p id="room-features">Room Features:</p>
+                        <ul>
+                            <li>Balcony: <span id="balcony-value">Yes</span></li>
+                            <li>Accommodation Size: <span id="accommodation-size-value">5</span></li>
+                            <li>Price: <span id="room-price-value">£200.00</span></li>
+                            <li>Number of Beds: <span id="beds-value">2</span></li>
+                        </ul>`;
+                } else {  // Even room
+                    roomDetailsElement.innerHTML = `
+                        <h2>Selected Room Details</h2>
+                        <p id="room-type">Room Type: <span id="room-type-value">Standard</span></p>
+                        <p id="room-features">Room Features:</p>
+                        <ul>
+                            <li>Balcony: <span id="balcony-value">No</span></li>
+                            <li>Accommodation Size: <span id="accommodation-size-value">4</span></li>
+                            <li>Price: <span id="room-price-value">£150.00</span></li>
+                            <li>Number of Beds: <span id="beds-value">1</span></li>
+                        </ul>`;
                 }
             }
     
-            // Add functionality for the "View Upcoming Bookings" button
-            const viewUpcomingBookingsButton = document.getElementById('view-upcoming-bookings');
-            viewUpcomingBookingsButton.addEventListener('click', function () {
-                toggleUpcomingBookings();
+            const roomDropdown = document.getElementById('room-dropdown');
+            roomDropdown.addEventListener('change', function () {
+                const selectedRoom = parseInt(this.value, 10);
+                if (!isNaN(selectedRoom)) {
+                    updateRoomDetails(selectedRoom);
+                }
             });
-    
-            // Function to handle form submission and update room status
-            function updateRoomStatus(event) {
-                event.preventDefault();
-        
-                const selectedRoom = document.getElementById('room-dropdown').value;
-                const selectedStatus = document.getElementById('room-status').value;
-        
-                // Perform any additional logic or AJAX request to update room status here
-        
-                // Display an alert box with the message from the server
-                alert(data.alert_message);
-            }
-                        
-    
         });
     </script>
-            
+    
+    
+    
+    
 </body>
 </html>

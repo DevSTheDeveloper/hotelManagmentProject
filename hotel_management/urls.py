@@ -16,6 +16,7 @@ urlpatterns = [
     path('reservations/', views.make_reservation, name='make_reservation'),
     path('guests/', TemplateView.as_view(template_name='guest.html'), name='guest_page'),
 
+
     # Add the URL pattern for logout
     path('logout/', auth_views.LogoutView.as_view(next_page='/'), name='logout'),
     
