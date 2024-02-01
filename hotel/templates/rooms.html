@@ -14,6 +14,7 @@
             height: 100vh;
             margin: 0;
             padding: 20px;
+            overflow: hidden;
         }
         .button1 {
             width: 90px;
@@ -338,38 +339,7 @@
         </div>
     </div>
 
-    <div class="guest-details">
-        <h4>Upcoming Bookings</h4>
-        <div id="upcoming-bookings-placeholder">
-            <!-- Display upcoming bookings here -->
-            <table class="upcoming-bookings-table">
-                <thead>
-                    <tr>
-                        <th>Check-in Date</th>
-                        <th>Check-out Date</th>
-                        <th>Guest Name</th>
-                        <th>Guest ID</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Sample data for upcoming bookings -->
-                    <tr>
-                        <td>2023-10-15</td>
-                        <td>2023-10-20</td>
-                        <td>John Doe</td>
-                        <td>12345</td>
-                    </tr>
-                    <tr>
-                        <td>2023-10-22</td>
-                        <td>2023-10-25</td>
-                        <td>Jane Smith</td>
-                        <td>67890</td>
-                    </tr>
-                    <!-- Add more rows with upcoming bookings data here -->
-                </tbody>
-            </table>
-        </div>
-    </div>
+    
     
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -380,7 +350,7 @@
                 if (selectedRoom % 2 === 1) {  // Odd room
                     roomDetailsElement.innerHTML = `
                         <h2>Selected Room Details</h2>
-                        <p id="room-type">Room Type: <span id="room-type-value">Standard</span></p>
+                        <p id="room-type">Room Type: <span id="room-type-value">Suite</span></p>
                         <p id="room-features">Room Features:</p>
                         <ul>
                             <li>Balcony: <span id="balcony-value">Yes</span></li>
