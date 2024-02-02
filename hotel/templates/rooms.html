@@ -280,7 +280,7 @@
         <ul>
             <li>Balcony: <span id="balcony-value">N/A</span></li>
             <li>Accommodation Size: <span id="accommodation-size-value">N/A</span></li>
-            <li>Price: <span id="room-price-value">N/A</span></li>
+            <li>Price: £<span id="room-price-value">${roomPrice.toFixed(2)}</span></li>
         </ul>
     </div>
     
@@ -292,25 +292,24 @@
             <h3>Services</h3>
             <h4>Food & Drink</h4>
             <label for="service-lunch">
-                <input type="checkbox" id="service-lunch" name="services" value="lunch">
-                Lunch (£10.00)
+                <input type="checkbox" id="service-lunch" name="services" value="lunch" data-price="10.00">
+                Lunch (£10.00/Day)
             </label>
             <label for="service-dinner">
-                <input type="checkbox" id="service-dinner" name="services" value="dinner">
-                Dinner (£15.00)
+                <input type="checkbox" id="service-dinner" name="services" value="dinner" data-price="15.00">
+                Dinner (£15.00/Day)
             </label>
             <h4>Misc.</h4>
             <label for="service-dryclean">
-                <input type="checkbox" id="service-dryclean" name="services" value="dryclean">
-                Dry Cleaning (£10.00)
+                <input type="checkbox" id="service-dryclean" name="services" value="dryclean" data-price="10.00">
+                Dry Cleaning (£10.00/Day)
             </label>
             <!-- Add more services as needed -->
             <br>
             <br>
-            <label>Total: £0.00</label>
+            <label>Total Services: <span id="services-total">0.00</span></label>
             <br>
-            <h6>Note: These services are only applied for today's date</h6>
-            <button class="submit" id="submit-services">Submit Services</button>
+            <h6>Note: These services are the daily fee</h6>
         </div>
     
         <div class="services">
@@ -343,47 +342,99 @@
     
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            function updateRoomDetails(selectedRoom) {
-                const roomDetailsElement = document.getElementById('selected-room');
+            // Initialize base room price and service total
+            const roomDetailsElement = document.getElementById('selected-room');
+            let roomPrice = 0;
+            let serviceTotal = 0;
     
-                // Manually set room details based on room number
-                if (selectedRoom % 2 === 1) {  // Odd room
-                    roomDetailsElement.innerHTML = `
-                        <h2>Selected Room Details</h2>
-                        <p id="room-type">Room Type: <span id="room-type-value">Suite</span></p>
-                        <p id="room-features">Room Features:</p>
-                        <ul>
-                            <li>Balcony: <span id="balcony-value">Yes</span></li>
-                            <li>Accommodation Size: <span id="accommodation-size-value">5</span></li>
-                            <li>Price: <span id="room-price-value">£200.00</span></li>
-                            <li>Number of Beds: <span id="beds-value">2</span></li>
-                        </ul>`;
-                } else {  // Even room
-                    roomDetailsElement.innerHTML = `
-                        <h2>Selected Room Details</h2>
-                        <p id="room-type">Room Type: <span id="room-type-value">Standard</span></p>
-                        <p id="room-features">Room Features:</p>
-                        <ul>
-                            <li>Balcony: <span id="balcony-value">No</span></li>
-                            <li>Accommodation Size: <span id="accommodation-size-value">4</span></li>
-                            <li>Price: <span id="room-price-value">£150.00</span></li>
-                            <li>Number of Beds: <span id="beds-value">1</span></li>
-                        </ul>`;
-                }
+            // Function to update the total price
+            function updateTotalPrice() {
+                const checkboxes = document.querySelectorAll('input[name="services"]:checked');
+                serviceTotal = 0;
+    
+                checkboxes.forEach(checkbox => {
+                    const price = parseFloat(checkbox.dataset.price);
+                    serviceTotal += price;
+                });
+    
+                // Update the displayed price in the room details
+                const totalPrice = roomPrice ? (roomPrice + serviceTotal).toFixed(2) : 'N/A';
+                document.getElementById('room-price-value').innerText = roomPrice ? `£${totalPrice}` : 'N/A';
+                document.getElementById('services-total').innerText = `£${serviceTotal.toFixed(2)}`;
             }
     
+            // Attach event listener to checkboxes for dynamic update
+            const checkboxes = document.querySelectorAll('input[name="services"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function () {
+                    updateTotalPrice(); // Update total price dynamically
+                });
+            });
+    
+            // Function to update room details
+            function updateRoomDetails(selectedRoom) {
+                if (!isNaN(selectedRoom)) {
+                    // Manually set room details based on room number
+                    if (selectedRoom % 2 === 1) {  // Odd room
+                        roomPrice = 200.00;
+                        roomDetailsElement.innerHTML = `
+                            <h2>Selected Room Details</h2>
+                            <p id="room-type">Room Type: <span id="room-type-value">Suite</span></p>
+                            <p id="room-features">Room Features:</p>
+                            <ul>
+                                <li>Balcony: <span id="balcony-value">Yes</span></li>
+                                <li>Accommodation Size: <span id="accommodation-size-value">4</span></li>
+                                <li>Price: £<span id="room-price-value">${roomPrice.toFixed(2)}</span></li>
+                                <li>Number of Beds: <span id="beds-value">2</span></li>
+                            </ul>`;
+                    } else {  // Even room
+                        roomPrice = 150.00;
+                        roomDetailsElement.innerHTML = `
+                            <h2>Selected Room Details</h2>
+                            <p id="room-type">Room Type: <span id="room-type-value">Standard</span></p>
+                            <p id="room-features">Room Features:</p>
+                            <ul>
+                                <li>Balcony: <span id="balcony-value">No</span></li>
+                                <li>Accommodation Size: <span id="accommodation-size-value">2</span></li>
+                                <li>Price: £<span id="room-price-value">${roomPrice.toFixed(2)}</span></li>
+                                <li>Number of Beds: <span id="beds-value">1</span></li>
+                            </ul>`;
+                    }
+                } else {
+                    // Clear room details when no room is selected
+                    roomPrice = 0;
+                    roomDetailsElement.innerHTML = '';
+                }
+    
+                // Display the initial room price in the room details
+                updateTotalPrice();
+            }
+    
+            // Event listener for room dropdown change
             const roomDropdown = document.getElementById('room-dropdown');
             roomDropdown.addEventListener('change', function () {
                 const selectedRoom = parseInt(this.value, 10);
-                if (!isNaN(selectedRoom)) {
-                    updateRoomDetails(selectedRoom);
-                }
+                updateRoomDetails(selectedRoom);
             });
+    
+            // Initialize room details on page load
+            updateRoomDetails(roomDropdown.value);
         });
     </script>
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
     
 </body>
 </html>
