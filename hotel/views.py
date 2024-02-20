@@ -51,7 +51,7 @@ def reservation_view(request):
         if form.is_valid():
             # Process the form data (e.g., save it to a database)
             # Redirect to a thank you page or another appropriate page
-            return redirect('thank_you')
+            return redirect('reservation.html')
     else:
         form = ReservationForm()
 
@@ -70,8 +70,8 @@ def make_reservation(request):
         if form.is_valid():
             # Extract form data
             room_type = form.cleaned_data['room_type']
-            check_in_date = form.cleaned_data['start_date']
-            check_out_date = form.cleaned_data['end_date']
+            start_date = form.cleaned_data['start_date']
+            end_date = form.cleaned_data['end_date']
             guest_first_name = form.cleaned_data['guest_first_name']
             guest_last_name = form.cleaned_data['guest_last_name']
             guest_email = form.cleaned_data['guest_email']
@@ -79,49 +79,54 @@ def make_reservation(request):
             guest_phone = form.cleaned_data['guest_phone']
             guest_address = form.cleaned_data['guest_address']
 
-            # Check room availability
-            try:
-                room = Room.objects.get(room_type=room_type, status='Available')
-            except Room.DoesNotExist:
-                return render(request, 'reservations.html', {'error_message': 'No rooms available of this type'})
+            # Use a transaction to ensure atomicity
+            with transaction.atomic():
+                # Check room availability
+                try:
+                    room = Room.objects.select_for_update().get(room_type=room_type, status='Available')
+                except Room.DoesNotExist:
+                    return render(request, 'reservations.html', {'error_message': 'No rooms available of this type'})
 
-            # Check if the guest with the given email already exists
-            try:
-                guest = Guest.objects.get(email=guest_email)
-            except Guest.DoesNotExist:
-                # Guest does not exist, create a new one
-                guest = Guest.objects.create(
-                    email=guest_email,
-                    first_name=guest_first_name,
-                    last_name=guest_last_name,
-                    country_code=country_code,
-                    phone=guest_phone,
-                    address=guest_address,
+                # Check if the guest with the given email already exists
+                try:
+                    guest = Guest.objects.get(email=guest_email)
+                except Guest.DoesNotExist:
+                    # Guest does not exist, create a new one
+                    guest = Guest.objects.create(
+                        email=guest_email,
+                        first_name=guest_first_name,
+                        last_name=guest_last_name,
+                        country_code=country_code,
+                        phone=guest_phone,
+                        address=guest_address,
+                    )
+                    # Generate a unique user ID
+                    guest.user_id = generate_unique_user_id()
+                    guest.save()
+
+                # Assign the room to the guest
+                room.guest_id = guest
+                room.save()
+
+                # Create a reservation
+                reservation = Reservation.objects.create(
+                    guest=guest,
+                    room=room,
+                    check_in=start_date,
+                    check_out=end_date,
+                    # Set other fields as needed
                 )
-                # Generate a unique user ID
-                guest.user_id = generate_unique_user_id()
-                guest.save()
 
-            # Create a reservation
-            reservation = Reservation.objects.create(
-                guest=guest,
-                room=room,
-                check_in=check_in_date,
-                check_out=check_out_date,
-                # Set other fields as needed
-            )
+                # Update room status to "Occupied"
+                room.status = 'Occupied'
+                room.save()
 
-            # Update room status
-            room.status = 'Occupied'
-            room.save()
-
-            return redirect('success_page')  # Redirect to a success page
+                return redirect('success_page')  # Redirect to a success page
 
     else:
         form = ReservationForm()
 
     return render(request, 'reservations.html', {'form': form})
-
 
 def redirect_to_rooms(request):
     return redirect('rooms')

@@ -167,6 +167,22 @@
             cursor: pointer;
             margin-right: 20px;
         }
+
+        .button2 {
+            width: 90px;
+            height: 40px;
+            padding: 5px;
+            padding-left: 17px;
+            background-color: rgb(95, 159, 255);
+            color: white !important;
+            font-weight: bold;
+            font-size: 14px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-right: 20px;
+        }
+
     </style>
 </head>
 <body>
@@ -181,7 +197,7 @@
         </div>
         <div class="date-picker-container spacer">
             <label for="end-date">Check-Out Date:</label>
-            <input type="date" id="end-date" name "end_date" required class="date-picker">
+            <input type="date" id="end-date" name="end_date" required class="date-picker">
         </div>
 
         <div class="room-type-container">
@@ -195,33 +211,31 @@
                     <input type="radio" id="deluxe" name="room_type" value="deluxe">
                     <label for="deluxe">Deluxe</label>
                 </div>
-                <div class="room-type-options-wrapper">
-                    <input type="radio" id="suite" name="room_type" value="suite">
-                    <label for="suite">Suite</label>
-                </div>
             </div>
         </div>
 
-        <label for="guest-first-name">Guest First Name:</label>
-        <input type="text" id="guest-first-name" name="guest_first_name" required>
+        <!-- Hidden fields for guest first and last name -->
+        <div id="guest-name-fields" style="display: none;">
+            <label for="guest-first-name">Guest First Name:</label>
+            <input type="text" id="guest-first-name" name="guest_first_name" required>
 
-        <label for="guest-last-name">Guest Last Name:</label>
-        <input type="text" id="guest-last-name" name="guest_last_name" required>
+            <label for="guest-last-name">Guest Last Name:</label>
+            <input type="text" id="guest-last-name" name="guest_last_name" required>
+        </div>
 
         <h2>Contact Information</h2>
         <label for="guest-email">Email:</label>
         <input type="email" id="guest-email" name="guest_email" required>
-        <label>If customer email is already stored, will be linked to prev bookings automatically</label>
-        <label for="guest-phone">Phone:</label>
+        <label>If the customer's email is already stored, it will be linked to previous bookings automatically.</label>
+        <label for="guest-phone">Phone (Optional):</label>
         <div class="country-code">
-            <input type="tel" id="guest-phone" name="guest_phone" required>
+            <input type="tel" id="guest-phone" name="guest_phone">
         </div>
-
-        <label for="guest-address">Address:</label>
-        <textarea id="guest-address" name="guest_address" rows="4" required></textarea>
+        
         <br>
         <br>
-        <a type="submit" class="button2">Submit</a>
+        <!-- Use button instead of anchor for form submission -->
+        <button type="submit" class="button2" onclick="validateForm()">Submit</button>
     </form>
 
     <script>
@@ -232,19 +246,38 @@
         const minCheckInDate = new Date(currentDate);
         const minCheckOutDate = new Date(currentDate);
         minCheckOutDate.setDate(currentDate.getDate() + 1);
-
+    
         // Set the minimum date for check-in and check-out
         startDateInput.min = minCheckInDate.toISOString().split('T')[0];
         endDateInput.min = minCheckOutDate.toISOString().split('T')[0];
-
-        // Add a form submission event listener
-        document.getElementById('reservation-form').addEventListener('submit', function(event) {
-            // Display an alert when the form is submitted
-            alert('Reservation has been confirmed!');
-
-            // Prevent the default form submission behavior
-            event.preventDefault();
-        });
+    
+        function validateForm() {
+            // Get the guest email value
+            const guestEmail = document.getElementById('guest-email').value;
+    
+            // Get the selected check-in and check-out dates
+            const checkInDate = new Date(startDateInput.value);
+            const checkOutDate = new Date(endDateInput.value);
+    
+            // Check if the check-in date is later than or equal to the check-out date
+            if (checkInDate >= checkOutDate) {
+                alert('Check-in date must be earlier than Check-out date.');
+                return false; // Prevent form submission
+            }
+    
+            // Check if the guest email is empty
+            if (guestEmail.trim() === '') {
+                // Show the guest name fields if the email is empty
+                document.getElementById('guest-name-fields').style.display = 'block';
+            } else {
+                // Hide the guest name fields if the email is not empty
+                document.getElementById('guest-name-fields').style.display = 'none';
+            }
+    
+            // You can add more validation or processing logic here if needed
+        }
     </script>
-</body>
+    
+    </body>
+
 </html>

@@ -110,9 +110,9 @@ class Guest(models.Model):
 
 class GuestData(models.Model):
     guest_id = models.ForeignKey(Guest, on_delete=models.CASCADE)
-    guest_phone = models.CharField(max_length=20)
+    guest_phone = models.CharField(max_length=20, null=True, blank=True)
     guest_email = models.CharField(max_length=320)
-    guest_address = models.CharField(max_length=200)
+    id = models.AutoField(primary_key=True)
 
     class Meta:
         db_table = 'hotel_guest_data'
@@ -136,7 +136,6 @@ class Room(models.Model):
 
     class Meta:
         db_table = 'hotel_room'
-
 
 def get_default_checkout_time():
     return timezone.now() + timedelta(days=1)
