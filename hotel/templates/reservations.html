@@ -16,6 +16,7 @@
             height: 100vh;
             margin: 0;
             padding: 20px;
+            overflow: hidden
         }
 
         #header {
@@ -51,9 +52,8 @@
             font-weight: bold;
         }
 
-        input[type="text"],
+        input[type="date"],
         input[type="email"],
-        input[type="tel"],
         select {
             width: 100%;
             padding: 10px;
@@ -62,14 +62,8 @@
             border-radius: 4px;
         }
 
-        .date-picker-container {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-        }
-
-        .date-picker {
-            width: 100%;
+        .room-type-container {
+            margin-bottom: 20px;
         }
 
         .room-type-options {
@@ -85,24 +79,6 @@
 
         .room-type-options-wrapper input[type="radio"] {
             margin-right: 8px;
-        }
-
-        .payment-method-label {
-            margin-right: 16px;
-        }
-
-        .credit-card-details {
-            display: none;
-        }
-
-        .credit-card-input {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 20px;
-            border: none;
-            background: none;
-            font-size: 16px;
-            text-align: center;
         }
 
         .spacer {
@@ -122,55 +98,14 @@
             background-color: #2980b9;
         }
 
-        .payment-method-container {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
+        .error-message {
+            color: red;
+            margin-top: 10px;
         }
 
-        .payment-method-label {
-            display: flex;
-            align-items: center;
-            margin-right: 16px;
-        }
-
-        .payment-method-label input[type="radio"] {
-            margin-right: 8px;
-        }
-
-        .button1 {
+        .return-button {
             width: 90px;
             height: 20px;
-            padding: 5px;
-            padding-left: 17px;
-            background-color: rgb(95, 159, 255);
-            color: white !important;
-            font-weight: bold;
-            font-size: 14px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            margin-right: 20px;
-        }
-
-        .button2 {
-            width: 90px;
-            height: 40px;
-            padding: 5px;
-            padding-left: 17px;
-            background-color: rgb(95, 159, 255);
-            color: white !important;
-            font-weight: bold;
-            font-size: 14px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            margin-right: 20px;
-        }
-
-        .button2 {
-            width: 90px;
-            height: 40px;
             padding: 5px;
             padding-left: 17px;
             background-color: rgb(95, 159, 255);
@@ -187,10 +122,11 @@
 </head>
 <body>
     <div id="header">
-        <a href="{% url 'homepage' %}" class="button1">RETURN</a>
+        <a href="{% url 'homepage' %}" class="return-button">RETURN</a>
     </div>
     <h1>Reservation Form</h1>
     <form method="post" action="{% url 'make_reservation' %}" id="reservation-form">
+        {% csrf_token %}
         <div class="date-picker-container spacer">
             <label for="start-date">Check-In Date:</label>
             <input type="date" id="start-date" name="start_date" required class="date-picker">
@@ -200,48 +136,46 @@
             <input type="date" id="end-date" name="end_date" required class="date-picker">
         </div>
 
+        <!-- Add a hidden input for the room type -->
+        <input type="hidden" id="room-type" name="room_type" value="">
+
         <div class="room-type-container">
-            <label for="room-type">Room Type:</label>
+            <label>Room Type:</label>
             <div class="room-type-options">
                 <div class="room-type-options-wrapper">
-                    <input type="radio" id="standard" name="room_type" value="standard" required>
+                    <input type="radio" id="standard" name="room_type_radio" value="standard" required>
                     <label for="standard">Standard</label>
                 </div>
                 <div class="room-type-options-wrapper">
-                    <input type="radio" id="deluxe" name="room_type" value="deluxe">
+                    <input type="radio" id="deluxe" name="room_type_radio" value="deluxe">
                     <label for="deluxe">Deluxe</label>
                 </div>
             </div>
         </div>
 
-        <!-- Hidden fields for guest first and last name -->
-        <div id="guest-name-fields" style="display: none;">
-            <label for="guest-first-name">Guest First Name:</label>
-            <input type="text" id="guest-first-name" name="guest_first_name" required>
-
-            <label for="guest-last-name">Guest Last Name:</label>
-            <input type="text" id="guest-last-name" name="guest_last_name" required>
-        </div>
-
         <h2>Contact Information</h2>
         <label for="guest-email">Email:</label>
         <input type="email" id="guest-email" name="guest_email" required>
-        <label>If the customer's email is already stored, it will be linked to previous bookings automatically.</label>
-        <label for="guest-phone">Phone (Optional):</label>
-        <div class="country-code">
-            <input type="tel" id="guest-phone" name="guest_phone">
-        </div>
         
         <br>
         <br>
         <!-- Use button instead of anchor for form submission -->
-        <button type="submit" class="button2" onclick="validateForm()">Submit</button>
+        <button type="submit" class="button2" onclick="return validateForm();">Submit</button>
     </form>
+
+
+    {% if form.errors %}
+        <div class="error-message">
+            {{ form.errors.guest_email.0 }}
+        </div>
+    {% endif %}
 
     <script>
         // Get the input elements and calculate minimum dates
         const startDateInput = document.getElementById('start-date');
         const endDateInput = document.getElementById('end-date');
+        const roomTypeInput = document.getElementById('room-type');
+        const roomTypeRadios = document.getElementsByName('room_type_radio');
         const currentDate = new Date();
         const minCheckInDate = new Date(currentDate);
         const minCheckOutDate = new Date(currentDate);
@@ -251,10 +185,14 @@
         startDateInput.min = minCheckInDate.toISOString().split('T')[0];
         endDateInput.min = minCheckOutDate.toISOString().split('T')[0];
     
+        // Add an event listener to update the hidden input for room type
+        roomTypeRadios.forEach(function (radio) {
+            radio.addEventListener('change', function () {
+                roomTypeInput.value = document.querySelector('input[name="room_type_radio"]:checked').value;
+            });
+        });
+
         function validateForm() {
-            // Get the guest email value
-            const guestEmail = document.getElementById('guest-email').value;
-    
             // Get the selected check-in and check-out dates
             const checkInDate = new Date(startDateInput.value);
             const checkOutDate = new Date(endDateInput.value);
@@ -265,19 +203,10 @@
                 return false; // Prevent form submission
             }
     
-            // Check if the guest email is empty
-            if (guestEmail.trim() === '') {
-                // Show the guest name fields if the email is empty
-                document.getElementById('guest-name-fields').style.display = 'block';
-            } else {
-                // Hide the guest name fields if the email is not empty
-                document.getElementById('guest-name-fields').style.display = 'none';
-            }
-    
-            // You can add more validation or processing logic here if needed
+            alert('Room has been booked.');
+            return true; // Proceed with form submission
         }
-    </script>
-    
-    </body>
 
-</html>
+    </script>
+</body>
+</html> 
