@@ -170,7 +170,6 @@
             <a href="{% url 'rooms' %}" class="button">Rooms</a>
             <a href="{% url 'guest_page' %}" class="button">Guests</a>
             <a href="{% url 'make_reservation' %}" class="button">Reservations</a>
-            <button class="button">Payments</button>
         </div>
 
         {% if user.is_authenticated %}
@@ -180,6 +179,8 @@
                 <button class="admin-button-false" disabled>Admin</button>
             {% endif %}
         {% endif %}
+
+
     </div>
 </body>
 </html>

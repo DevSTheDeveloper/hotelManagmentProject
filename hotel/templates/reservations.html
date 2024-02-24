@@ -191,7 +191,7 @@
                 roomTypeInput.value = document.querySelector('input[name="room_type_radio"]:checked').value;
             });
         });
-
+    
         function validateForm() {
             // Get the selected check-in and check-out dates
             const checkInDate = new Date(startDateInput.value);
@@ -203,10 +203,21 @@
                 return false; // Prevent form submission
             }
     
+            // Check if the check-out date has passed
+            const currentDate = new Date();
+            if (checkOutDate < currentDate) {
+                alert('Check-out date has passed. Guest will be evicted.');
+    
+                fetch('/evict_guest', { method: 'POST', ({ CASCADE guest.id: 'GUEST.guest_id_id' }) });
+                 //NOTE: (field)_id represents a primary key in the GUEST table, guest_id is the primary key field
+    
+                // Prevent form submission after eviction alert
+                return false;
+            }
+    
             alert('Room has been booked.');
             return true; // Proceed with form submission
         }
-
     </script>
-</body>
+    </body>
 </html> 

@@ -7,6 +7,18 @@ from django.core.exceptions import ValidationError
 import random
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 
+class HotelGuest(models.Model):
+    guest_fname = models.CharField(max_length=100)
+    guest_sname = models.CharField(max_length=100)
+    guest_id = models.CharField(primary_key=True, max_length=4, unique=True)
+    guest_email = models.EmailField(max_length=320)
+
+    class Meta:
+        db_table = 'hotel_guest'  # If you want to specify the table name
+
+    def __str__(self):
+        return f"{self.guest_fname} {self.guest_sname} ({self.guest_id})"
+
 
 class StaffManager(BaseUserManager):
     def create_user(self, staff_id, password=None, **extra_fields):
@@ -99,23 +111,6 @@ class CustomStaff(AbstractBaseUser, PermissionsMixin):
         return self.staff_id
 
 
-class Guest(models.Model):
-    guest_fname = models.CharField(max_length=100)
-    guest_sname = models.CharField(max_length=100)
-    guest_id = models.CharField(primary_key=True, max_length=4, unique=True)
-
-    class Meta:
-        db_table = 'hotel_guest'
-
-
-class GuestData(models.Model):
-    guest_id = models.ForeignKey(Guest, on_delete=models.CASCADE)
-    guest_phone = models.CharField(max_length=20, null=True, blank=True)
-    guest_email = models.CharField(max_length=320)
-    id = models.AutoField(primary_key=True)
-
-    class Meta:
-        db_table = 'hotel_guest_data'
 
 
 class RoomData(models.Model):
@@ -132,7 +127,7 @@ class RoomData(models.Model):
 class Room(models.Model):
     room_number = models.CharField(max_length=10, primary_key=True)
     status = models.CharField(max_length=20)
-    guest_id = models.ForeignKey(Guest, on_delete=models.SET_NULL, null=True, blank=True)
+    guest_id = models.ForeignKey(HotelGuest, on_delete=models.SET_NULL, null=True, blank=True)
 
     class Meta:
         db_table = 'hotel_room'
@@ -147,7 +142,7 @@ def validate_future_date(value):
 
 
 class Reservation(models.Model):
-    guest = models.ForeignKey(Guest, on_delete=models.CASCADE)
+    guest = models.ForeignKey(HotelGuest, on_delete=models.CASCADE)
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
     check_in = models.DateTimeField(default=timezone.now, validators=[validate_future_date])
     check_out = models.DateTimeField(default=get_default_checkout_time, validators=[validate_future_date])
@@ -200,7 +195,7 @@ class Payment(models.Model):
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     payment_date = models.DateTimeField(default=timezone.now)
     payment_type = models.CharField(max_length=10, choices=PAYMENT_TYPE_CHOICES)
-    from_customer = models.ForeignKey(Guest, on_delete=models.CASCADE, blank=True, null=True)
+    from_customer = models.ForeignKey(HotelGuest, on_delete=models.CASCADE, blank=True, null=True)
     to_staff = models.ForeignKey(CustomStaff, on_delete=models.CASCADE, blank=True, null=True)
 
     class Meta:

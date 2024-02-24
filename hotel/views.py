@@ -1,11 +1,11 @@
 import logging
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
-from .models import Room
+from .models import Room, HotelGuest
 from .models import Reservation 
 from .forms import ReservationForm
 from . import views
-from .models import Guest
+from .models import HotelGuest
 from django.db import transaction
 from django.http import JsonResponse
 from django.contrib.auth.models import User
@@ -107,6 +107,26 @@ def make_reservation(request):
 
 
 
+def get_all_guests(request):
+    search_term = request.GET.get('search', '')
+    
+    guests = Guest.objects.filter(
+        Q(guest_fname__icontains=search_term) |
+        Q(guest_sname__icontains=search_term) |
+        Q(guest_id__icontains=search_term)
+    )
+
+    guest_list = []
+
+    for guest in guests:
+        guest_list.append({
+            'guest_fname': guest.guest_fname,
+            'guest_sname': guest.guest_sname,
+            'guest_id': guest.guest_id,
+            'guest_email': GuestData.objects.get(guest_id=guest.guest_id).guest_email,  # Assuming GuestData has a ForeignKey to Guest
+        })
+
+    return JsonResponse(guest_list, safe=False)
 
 def redirect_to_rooms(request):
     return redirect('rooms')
@@ -180,3 +200,36 @@ def create_user_view(request):
         user.save()
 
         return redirect('login_view')
+
+
+#to create new guests:
+
+def create_guest_view(request):
+    if request.method == 'POST':
+        guest_fname = request.POST.get('guest_fname')
+        guest_sname = request.POST.get('guest_sname')
+        guest_email = request.POST.get('guest_email')
+
+        # Create a new guest
+        guest = Guest.objects.create(
+            guest_fname=guest_fname,
+            guest_sname=guest_sname,
+            guest_id=generate_unique_guest_id()  # You need to implement a function to generate a unique guest ID
+        )
+
+        # Create corresponding guest data
+        guest_data = GuestData.objects.create(
+            guest_id=guest,
+            guest_email=guest_email
+        )
+
+        # Redirect or return JSON response based on your needs
+        if request.is_ajax():
+            return JsonResponse({'success': True, 'message': 'Guest created successfully'})
+        else:
+            return redirect('homepage')
+
+    if request.is_ajax():
+        return JsonResponse({'success': False, 'message': 'Invalid request'})
+    else:
+        return JsonResponse({'success': False, 'message': 'Invalid request'})

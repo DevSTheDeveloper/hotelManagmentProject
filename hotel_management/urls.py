@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import path
 from django.views.generic import TemplateView
 from django.contrib.auth import views as auth_views  # Import Django's authentication views
-from hotel.views import login_view, redirect_to_rooms, redirect_to_homepage
+from hotel.views import login_view, redirect_to_rooms, redirect_to_homepage, get_all_guests
 from hotel import views
 
 urlpatterns = [
@@ -19,6 +19,10 @@ urlpatterns = [
 
     # Add the URL pattern for logout
     path('logout/', auth_views.LogoutView.as_view(next_page='/'), name='logout'),
+    
+    # To search for guest details 
+    path('api/get_all_guests/', get_all_guests, name='get_all_guests'),
+
     
         # Add the URL patterns for password reset
     path('password_reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),

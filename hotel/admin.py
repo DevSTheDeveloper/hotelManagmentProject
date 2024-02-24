@@ -1,9 +1,8 @@
 from django.contrib import admin
-from .models import CustomStaff, Guest, GuestData, RoomData, Room, Reservation, Service, Payment, ReservationServices
+from .models import CustomStaff, HotelGuest, RoomData, Room, Reservation, Service, Payment, ReservationServices
 
 admin.site.register(CustomStaff)
-admin.site.register(Guest)
-admin.site.register(GuestData)
+admin.site.register(HotelGuest)
 admin.site.register(RoomData)
 admin.site.register(Room)
 admin.site.register(Reservation)
