@@ -134,25 +134,25 @@
 <body>
     <div id="header">
         <a href="{% url 'homepage' %}" class="button1">RETURN</a>
-        <button class="button1" onclick="openPopup()">ADD GUEST</button>
     </div>
-    
+
     <div class="guest-details">
         <h2>All Guests</h2>
-        <input type="text" class="search-bar" placeholder="Search by Guest Name" oninput="searchGuests(this.value)">
+        <button class="button1" onclick="openPopup()">+GUEST</button>
+
+        <input type="text" class="search-bar" placeholder="Search by Guest Name" oninput= searchGuests(guest)>
         
         <div id="upcoming-bookings-placeholder">
             <table class="upcoming-bookings-table">
                 <thead>
                     <tr>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Guest ID</th>
-                        <th>Email</th>
+                        <th>First Name: {{ HotelGuest.fname}}</th>
+                        <th>Last Name: {{ HotelGuest.lname}}</th>
+                        <th>Guest ID: {{ HotelGuest.guest_id}}</th>
+                        <th>Email: {{ HotelGuest.email}}</th>
                     </tr>
                 </thead>
                 <tbody id="booking-table-body">
-                    <!-- Your existing content... -->
                 </tbody>
             </table>
         </div>
@@ -163,7 +163,7 @@
         <div class="popup-content">
             <span class="close" onclick="closePopup()">&times;</span>
             <h2>Add New Guest</h2>
-            <!-- Form to input guest information -->
+            {% csrf_token %}
             <form id="add-guest-form">
                 <label for="guest-fname">First Name:</label>
                 <input type="text" id="guest-fname" name="guest-fname" required>
@@ -173,46 +173,35 @@
 
                 <label for="guest-email">Email:</label>
                 <input type="email" id="guest-email" name="guest-email" required>
-
-                <!-- You can add more fields as needed -->
-
                 <input type="button" value="Add Guest" onclick="submitGuestForm()">
             </form>
         </div>
     </div>
 
     <script>
-        // Your existing scripts...
-
-        // Function to open the add guest popup
         function openPopup() {
             document.getElementById('add-guest-popup').style.display = 'block';
         }
 
-        // Function to close the add guest popup
         function closePopup() {
             document.getElementById('add-guest-popup').style.display = 'none';
         }
 
-        // Function to submit the add guest form (you can modify this based on your needs)
+        // Function to submit the add guest form 
         function submitGuestForm() {
             const form = document.getElementById('add-guest-form');
             
-            // Get form data and handle submission (you may want to use AJAX to submit to the server)
+            // Get form data and handle submission 
             const guestData = {
-                guest_fname: form.querySelector('#guest-fname').value,
+                guest_fname: form.querySelector('#guest.fname').value,
                 guest_sname: form.querySelector('#guest-sname').value,
                 guest_email: form.querySelector('#guest-email').value,
-                // Add more fields as needed
             };
 
-            // Simulate submitting to the server (replace with actual AJAX request)
             console.log('Submitting guest data:', guestData);
 
-            // After submission, close the popup
             closePopup();
             
-            // You may want to fetch and update the guest list after adding a new guest
             fetchAllGuests();
         }
     </script>

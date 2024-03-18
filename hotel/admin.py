@@ -3,9 +3,7 @@ from .models import CustomStaff, HotelGuest, RoomData, Room, Reservation, Servic
 
 admin.site.register(CustomStaff)
 admin.site.register(HotelGuest)
-admin.site.register(RoomData)
 admin.site.register(Room)
 admin.site.register(Reservation)
 admin.site.register(Service)
 admin.site.register(Payment)
-admin.site.register(ReservationServices)

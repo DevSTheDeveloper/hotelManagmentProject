@@ -271,9 +271,6 @@
     </div>
 
 
-    <!-- Room Features Section (Sample data, you need server-side scripting for database retrieval) -->
-    
-    <!-- Inside the room-list div, after the room-status dropdown -->
     <div id="selected-room">
         <h2>Selected Room Details</h2>
         <p id="room-features">Room Features:</p>
@@ -309,32 +306,27 @@
             <br>
             <label>Total Services: <span id="services-total">0.00</span></label>
             <br>
-            <h6>Note: These services are the daily fee</h6>
+            <h6>Note: These services are the daily fee, multiply by number of days stay for total</h6>
         </div>
     
         <div class="services">
             <h3>Guest</h3>
-            <label>Name:</label>
+            <label> Name: {{ HotelGuest.fname }}</label>
             <br>
             <br>
-            <label>Guest ID:</label>
+            <label>Guest ID: {{ HotelGuest.guest_id }}</label>
             <br>
             <br>
-            <label>Other Rooms: NONE</label>
             <br>
             <br>
-            <label>Phone Number: 000000000</label>
+            <label>Email: {{ HotelGuest.email }}</label>
             <br>
             <br>
-            <label>Email: hello@test.com</label>
             <br>
-            <br>
-            <button class="submit" id="see-guest">See Guest Details</button>
-            <br>
-            <button class="remove-guest" id="remove-guest">(Remove) Evict Guest</button>
+            <button class="remove-guest" id="remove-guest">(Remove) Evict/Check-Out Guest</button>
             <br>
             <h6>'See Guest' Details shows all Guests on record.</h6>
-            <h6>Evicting a guest does not delete the Guest details - To remove it, consult a manager or Admin</h6>
+            <h6>Evicting/Checking-Out a guest does not delete the Guest details - To remove it, consult a manager or Admin</h6>
         </div>
     </div>
 
@@ -371,10 +363,8 @@
                 });
             });
     
-            // Function to update room details
             function updateRoomDetails(selectedRoom) {
                 if (!isNaN(selectedRoom)) {
-                    // Manually set room details based on room number
                     if (selectedRoom % 2 === 1) {  // Odd room
                         roomPrice = 200.00;
                         roomDetailsElement.innerHTML = `
@@ -384,7 +374,7 @@
                             <ul>
                                 <li>Balcony: <span id="balcony-value">Yes</span></li>
                                 <li>Accommodation Size: <span id="accommodation-size-value">4</span></li>
-                                <li>Price: £<span id="room-price-value">${roomPrice.toFixed(2)}</span></li>
+                                <li>Price: <span id="room-price-value">${roomPrice.toFixed(2)}</span></li>
                                 <li>Number of Beds: <span id="beds-value">2</span></li>
                             </ul>`;
                     } else {  // Even room
@@ -396,7 +386,7 @@
                             <ul>
                                 <li>Balcony: <span id="balcony-value">No</span></li>
                                 <li>Accommodation Size: <span id="accommodation-size-value">2</span></li>
-                                <li>Price: £<span id="room-price-value">${roomPrice.toFixed(2)}</span></li>
+                                <li>Price: <span id="room-price-value">${roomPrice.toFixed(2)}</span></li>
                                 <li>Number of Beds: <span id="beds-value">1</span></li>
                             </ul>`;
                     }

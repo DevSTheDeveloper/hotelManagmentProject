@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect
 from .models import Room, HotelGuest
 from .models import Reservation 
 from .forms import ReservationForm
-from . import views
+from . import views, models
 from .models import HotelGuest
 from django.db import transaction
 from django.http import JsonResponse
@@ -13,6 +13,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth.signals import user_logged_in
 from django.dispatch import receiver
+from datetime import timedelta
+
 
 
 @receiver(user_logged_in)
@@ -49,7 +51,6 @@ def reservation_view(request):
         form = ReservationForm(request.POST)
         if form.is_valid():
             # Process the form data (e.g., save it to a database)
-            # Redirect to a thank you page or another appropriate page
             return redirect('reservation.html')
     else:
         form = ReservationForm()
@@ -76,26 +77,22 @@ def make_reservation(request):
 
             # Check if the guest with the given email already exists in hotel_guest_data
             try:
-                guest_data = GuestData.objects.get(guest_email=guest_email)
+                guest_data = HotelGuest.objects.get(guest_email=guest_email)
                 guest_id = guest_data.guest_id_id
-            except GuestData.DoesNotExist:
+            except HotelGuest.DoesNotExist:
                 # Guest does not exist in hotel_guest_data, return an error response
                 return JsonResponse({'error': "Email doesn't exist, please create the guest and enter details on 'Guest' tab."}, status=400)
 
-            # Use a transaction to ensure atomicity
             with transaction.atomic():
-                # Check room availability
+                # Check room availability - ie is room == 'avaliable'
                 try:
                     room = Room.objects.select_for_update().get(room_type=room_type, status='Available')
                 except Room.DoesNotExist:
                     return JsonResponse({'error': 'No rooms available of this type'}, status=400)
 
-                # Set the guest_id in the room model
                 room.guest_id_id = guest_id
                 room.save()
 
-                # Continue with the rest of your reservation logic
-                # ...
 
                 return JsonResponse({'success': 'Reservation successfully created'}, status=200)
 
@@ -105,28 +102,125 @@ def make_reservation(request):
     return render(request, 'reservations.html', {'form': form})
 
 
+from django.http import JsonResponse
+from .models import Room, Payment
+from django.utils import timezone
+
+def initiate_room_payment(request, room_number):
+    try:
+        # Get the selected room
+        room = Room.objects.get(room_number=room_number)
+
+        # Determine the room price based on whether the room number is odd or even
+        if room_number % 2 == 0:  # Even room number
+            original_price = 150
+        else:  # Odd room number
+            original_price = 200
+
+        # Calculate the new total price (original price)
+
+        payment = Payment.objects.create(
+            amount=original_price,
+            payment_date=timezone.now(),
+            payment_type='outgoing',  
+            from_customer=HotelGuest.guest_id, 
+        )
+
+        return JsonResponse({'success': True, 'message': 'Room payment initiation successful'})
+
+    except Room.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Room not found'})
 
 
+def initiate_new_payment(request, room_number):
+    try:
+        # Get the selected room
+        room = Room.objects.get(room_number=room_number)
+
+        # Get the original room price
+        original_price = room.price
+
+        # Get the total services selected by the guest
+        selected_services = request.POST.getlist('services')
+        total_services_price = sum([float(service_data['price']) for service_data in selected_services])
+
+        # Calculate the new total price (original price + services)
+        new_total_price = original_price + total_services_price
+
+        # Save payment information to the database
+        payment = payment.objects.create(
+            room=room,
+            original_price=original_price,
+            services_price=total_services_price,
+            new_total_price=new_total_price
+        )
+
+        return JsonResponse({'success': True, 'message': 'Payment initiation successful'})
+
+    except Room.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Room not   found'})
+    
+    except HotelGuest.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Guest not found'})
+
+
+#Used in guests.html - the search contents will be the names and email.
 def get_all_guests(request):
     search_term = request.GET.get('search', '')
     
-    guests = Guest.objects.filter(
-        Q(guest_fname__icontains=search_term) |
-        Q(guest_sname__icontains=search_term) |
-        Q(guest_id__icontains=search_term)
-    )
+    guests = HotelGuest.objects.filter(
+        guest_fname__icontains=search_term) | \
+        HotelGuest.objects.filter(guest_sname__icontains=search_term) | \
+        HotelGuest.objects.filter(guest_email__icontains=search_term)
 
     guest_list = []
 
     for guest in guests:
         guest_list.append({
-            'guest_fname': guest.guest_fname,
-            'guest_sname': guest.guest_sname,
-            'guest_id': guest.guest_id,
-            'guest_email': GuestData.objects.get(guest_id=guest.guest_id).guest_email,  # Assuming GuestData has a ForeignKey to Guest
+            'guest_fname': HotelGuest.guest_fname,
+            'guest_sname': HotelGuest.guest_sname,
+            'guest_id': HotelGuest.objects.get(guest_id=guest.guest_id).guest_email,
+            'guest_email': HotelGuest.guest_email
         })
 
     return JsonResponse(guest_list, safe=False)
+
+
+#used in Rooms.html for data retrieval 
+def get_guest_data(request):
+
+    guest_data = {
+        'guest_name': HotelGuest.guest_fnamename,
+        'guest_id': HotelGuest.guest_id,
+        'email': HotelGuest.guest_email,
+    }
+
+    return render(request, 'guest_data.html', {'guest_data': guest_data})
+
+
+
+def remove_guest(request):
+    guest_id = Room.guest_id 
+    now == datetime.now()
+
+    try:
+        # Fetch the guest based on the guest_id
+        guest = HotelGuest.objects.get(guest_id=guest_id)
+
+        # Perform cascade deletion: remove related reservations
+        reservations = Reservation.objects.filter(Q(guest=guest) or Q(check_out__date=now.date()))
+        reservations.delete()
+
+        # Finally, remove the guest
+        Room.guest_id.delete()
+
+        return HttpResponse("Guest removed successfully with cascade deletion.")
+    except Guest.DoesNotExist:
+        return HttpResponse("Guest not found.")
+    except Exception as e:
+        return HttpResponse(f"Error: {e}")
+
+
 
 def redirect_to_rooms(request):
     return redirect('rooms')
@@ -165,12 +259,10 @@ def update_room_status(request):
         print(f"Updating room {selected_room} status to {selected_status}")
 
         try:
-            # Retrieve the room from the database
             room = Room.objects.get(room_number=selected_room)
         except Room.DoesNotExist:
             return JsonResponse({'success': False, 'error': 'Room not found'})
 
-        # Update the room's status
         room.status = selected_status
         room.save()
 
@@ -202,7 +294,6 @@ def create_user_view(request):
         return redirect('login_view')
 
 
-#to create new guests:
 
 def create_guest_view(request):
     if request.method == 'POST':
@@ -210,26 +301,12 @@ def create_guest_view(request):
         guest_sname = request.POST.get('guest_sname')
         guest_email = request.POST.get('guest_email')
 
-        # Create a new guest
-        guest = Guest.objects.create(
+        guest_id = [] #created as an array which will be iterated 
+        
+        guest = HotelGuest.objects.create(
             guest_fname=guest_fname,
             guest_sname=guest_sname,
-            guest_id=generate_unique_guest_id()  # You need to implement a function to generate a unique guest ID
-        )
-
-        # Create corresponding guest data
-        guest_data = GuestData.objects.create(
-            guest_id=guest,
+            guest_id=guest_id[i+1],
             guest_email=guest_email
         )
 
-        # Redirect or return JSON response based on your needs
-        if request.is_ajax():
-            return JsonResponse({'success': True, 'message': 'Guest created successfully'})
-        else:
-            return redirect('homepage')
-
-    if request.is_ajax():
-        return JsonResponse({'success': False, 'message': 'Invalid request'})
-    else:
-        return JsonResponse({'success': False, 'message': 'Invalid request'})

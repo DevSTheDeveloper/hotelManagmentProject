@@ -14,8 +14,8 @@ class HotelGuest(models.Model):
     guest_email = models.EmailField(max_length=320)
 
     class Meta:
-        db_table = 'hotel_guest'  # If you want to specify the table name
-
+        db_table = 'hotel_guest' 
+        
     def __str__(self):
         return f"{self.guest_fname} {self.guest_sname} ({self.guest_id})"
 
@@ -36,21 +36,6 @@ class StaffManager(BaseUserManager):
         return self.create_user(staff_id, password, **extra_fields)
 
 
-class StaffData(models.Model):
-    staff_id = models.CharField(primary_key=True, max_length=3)
-    f_name = models.CharField(max_length=50)
-    l_name = models.CharField(max_length=50)
-    email = models.EmailField(max_length=320)
-    phone = models.CharField(max_length=20)
-    position = models.CharField(max_length=50)
-    department = models.CharField(max_length=50)
-    is_manager = models.BooleanField(default=False)
-
-    class Meta:
-        db_table = 'hotel_staff_data'
-
-    def __str__(self):
-        return f"Staff #{self.staff_id} - {self.f_name} {self.l_name}"
 
 
 class CustomStaff(AbstractBaseUser, PermissionsMixin):

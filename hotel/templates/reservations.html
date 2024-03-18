@@ -16,7 +16,7 @@
             height: 100vh;
             margin: 0;
             padding: 20px;
-            overflow: hidden
+            overflow: hidden;
         }
 
         #header {
@@ -118,6 +118,10 @@
             margin-right: 20px;
         }
 
+        #receipt-container {
+            float: left;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -125,7 +129,7 @@
         <a href="{% url 'homepage' %}" class="return-button">RETURN</a>
     </div>
     <h1>Reservation Form</h1>
-    <form method="post" action="{% url 'make_reservation' %}" id="reservation-form">
+    <form method="post" action="{% url 'make_reservation' %}" id="reservation-form" onsubmit="return validateForm();">
         {% csrf_token %}
         <div class="date-picker-container spacer">
             <label for="start-date">Check-In Date:</label>
@@ -160,9 +164,11 @@
         <br>
         <br>
         <!-- Use button instead of anchor for form submission -->
-        <button type="submit" class="button2" onclick="return validateForm();">Submit</button>
+        <button type="submit" class="button2">Submit</button>
     </form>
 
+    <!-- Display receipt information next to the form -->
+    <div id="receipt-container"></div>
 
     {% if form.errors %}
         <div class="error-message">
@@ -176,6 +182,7 @@
         const endDateInput = document.getElementById('end-date');
         const roomTypeInput = document.getElementById('room-type');
         const roomTypeRadios = document.getElementsByName('room_type_radio');
+    
         const currentDate = new Date();
         const minCheckInDate = new Date(currentDate);
         const minCheckOutDate = new Date(currentDate);
@@ -208,16 +215,46 @@
             if (checkOutDate < currentDate) {
                 alert('Check-out date has passed. Guest will be evicted.');
     
-                fetch('/evict_guest', { method: 'POST', ({ CASCADE guest.id: 'GUEST.guest_id_id' }) });
-                 //NOTE: (field)_id represents a primary key in the GUEST table, guest_id is the primary key field
+                fetch('/evict_guest', { method: 'POST', body: JSON.stringify({ guest_id: 'GUEST.guest_id_id' }) });
+                // NOTE: (field)_id represents a primary key in the GUEST table, guest_id is the primary key field
     
                 // Prevent form submission after eviction alert
                 return false;
             }
     
-            alert('Room has been booked.');
-            return true; // Proceed with form submission
+            // Calculate total cost based on selected room type and number of days
+            const roomType = roomTypeInput.value;
+            const nights = (checkOutDate - checkInDate) / (1000 * 60 * 60 * 24);
+            let totalCost = 0;
+    
+            if (roomType === 'standard') {
+                totalCost = 150 * nights;
+            } else if (roomType === 'deluxe') {
+                totalCost = 200 * nights;
+            }
+    
+            // Display receipt information in the receipt container
+            const receiptContainer = document.getElementById('receipt-container');
+    
+            receiptContainer.innerHTML = `
+                <h2>Reservation Details:</h2>
+                <p><strong>Guest Email:</strong> ${document.getElementById('guest-email').value}</p>
+                <p><strong>Check-In Date:</strong> ${startDateInput.value}</p>
+                <p><strong>Check-Out Date:</strong> ${endDateInput.value}</p>
+                <p><strong>Room Type:</strong> ${roomType}</p>
+                <p><strong>Total Cost:</strong> £${totalCost.toFixed(2)}</p>
+            `;
+    
+            // Clear form input fields
+            startDateInput.value = '';
+            endDateInput.value = '';
+            roomTypeRadios.forEach(radio => radio.checked = false);
+            document.getElementById('guest-email').value = '';
+    
+            // Prevent form submission
+            return false;
         }
     </script>
+        
     </body>
 </html> 
