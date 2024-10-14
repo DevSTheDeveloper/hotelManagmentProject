@@ -1,7 +1,7 @@
 # Hotel Management System
 
 ## Overview
-[Hotel Managment System Documentation .pdf](https://github.com/user-attachments/files/17366841/Hotel.Managment.System.Documentation.pdf)
+FULL TECHNICAL DOCUMENTATION/WRITE UP: [Hotel Managment System Documentation .pdf](https://github.com/user-attachments/files/17366841/Hotel.Managment.System.Documentation.pdf)
 
 The Hotel Management System is a web-based application that allows hotel staff to manage room reservations, check-in/check-out guests, and perform various administrative tasks. This system provides an efficient way to streamline hotel operations and improve the guest experience.
 
